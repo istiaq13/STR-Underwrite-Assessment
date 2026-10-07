@@ -18,8 +18,13 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   onSelect,
   onViewResults,
 }) => {
+  const isSubmitted =
+    property.status === "submitted" ||
+    ((property.submission_count ?? 0) > 0) ||
+    ((property.attempts ?? 0) > 0 && property.best_accuracy !== null);
+
   const getButtonText = () => {
-    if (property.status === "submitted") return "Review & Re-underwrite";
+    if (isSubmitted) return "Review & Re-underwrite";
     if (property.status === "in_progress") return "Resume Underwriting";
     return "Start Underwriting";
   };
@@ -39,13 +44,13 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   };
 
   const getStatusText = () => {
-    if (property.status === "submitted") return "Submitted";
+    if (isSubmitted) return "Submitted";
     if (property.status === "in_progress") return "In Progress";
     return "Not Started";
   };
 
   const getStatusStyle = () => {
-    if (property.status === "submitted") return "text-emerald-600 font-bold";
+    if (isSubmitted) return "text-emerald-600 font-bold";
     if (property.status === "in_progress") return "text-amber-500 font-bold";
     return "text-neutral-400 font-medium";
   };

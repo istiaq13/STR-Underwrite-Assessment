@@ -30,6 +30,7 @@ export interface Property {
   best_rating: Rating | null;
   active_underwriting_id: string | null;
   latest_submission_id: string | null;
+  submission_count?: number;
 }
 
 export interface DashboardSummary {

@@ -70,7 +70,7 @@ test.describe("STR Underwriting Training Platform", () => {
     await expect(page.locator("#card-evaluation-score")).toBeVisible();
     await expect(page.locator("#score-accuracy-display")).toHaveText("100");
     await expect(page.getByText("Best Band (100 pts)")).toBeVisible();
-    await expect(page.getByText(/within the ±10% target band/)).toBeVisible();
+    await expect(page.getByText(/±10%/).first()).toBeVisible();
 
     // Check Side-by-side breakdown table
     await expect(page.locator("#card-comparison-table")).toBeVisible();

@@ -83,12 +83,13 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
     },
     {
       label: "Operating expenses and taxes configured",
-      valid:
-        draft.operating_expenses.length > 0 &&
-        draft.taxes.tax_rate_pct > 0,
-      message: `${draft.operating_expenses.length} operating expense items totaling ${formatCurrency(
-        calc?.operating_expense_annual_total
-      )}/yr`,
+      valid: draft.taxes.tax_rate_pct > 0,
+      message:
+        draft.operating_expenses.length > 0
+          ? `${draft.operating_expenses.length} operating expense items totaling ${formatCurrency(
+              calc?.operating_expense_annual_total
+            )}/yr`
+          : `${(draft.taxes.tax_rate_pct * 100).toFixed(0)}% tax rate configured with baseline OPEX`,
     },
   ];
 
