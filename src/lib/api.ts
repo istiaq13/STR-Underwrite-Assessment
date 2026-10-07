@@ -54,7 +54,7 @@ export function mapBackendProperty(raw: DashboardApiResponse["properties"][numbe
     home_type: raw.home_type || "SINGLE_FAMILY",
     home_status: "FOR_SALE",
     time_on_zillow: "Recently listed",
-    img_src: raw.img_src || "https://picsum.photos/seed/brokenbow/640/420",
+    img_src: raw.img_src || "",
     detail_url: raw.detail_url || "",
     status: (raw.status as UnderwritingStatus) || "not_started",
     attempts: raw.attempts ?? 0,

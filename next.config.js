@@ -2,7 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["picsum.photos", "images.unsplash.com"],
+    domains: [
+      "picsum.photos",
+      "fastly.picsum.photos",
+      "images.unsplash.com",
+      "photos.zillowstatic.com",
+      "zillowstatic.com",
+    ],
     unoptimized: true,
   },
   async headers() {
@@ -11,8 +17,8 @@ const nextConfig = {
       script-src 'self' 'unsafe-eval' 'unsafe-inline';
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       font-src 'self' https://fonts.gstatic.com;
-      img-src 'self' data: blob: https://picsum.photos https://images.unsplash.com https://*.zillowstatic.com https://*.photos.zillowstatic.com;
-      connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 http://localhost:3000;
+      img-src 'self' data: blob: https:;
+      connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 http://localhost:3000 ws: wss:;
       frame-ancestors 'none';
       base-uri 'self';
       form-action 'self';

@@ -13,6 +13,7 @@ import {
   Bath,
   Maximize2,
   Calendar,
+  Building2,
 } from "lucide-react";
 
 interface PropertyHeaderProps {
@@ -80,11 +81,17 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
       <div className="p-4 sm:p-6 flex flex-col md:flex-row gap-5 items-start">
         {/* Thumbnail */}
         <div className="w-full md:w-44 h-32 rounded-xl bg-zinc-100 overflow-hidden flex-shrink-0 relative shadow-sm">
-          <img
-            src={property.img_src}
-            alt={property.address}
-            className="w-full h-full object-cover"
-          />
+          {property.img_src ? (
+            <img
+              src={property.img_src}
+              alt={property.address}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-400">
+              <Building2 className="w-8 h-8 opacity-40" />
+            </div>
+          )}
           <div className="absolute bottom-2 left-2 bg-zinc-900/90 text-white px-2 py-0.5 rounded-md text-xs font-mono font-bold backdrop-blur-md">
             {property.price}
           </div>
