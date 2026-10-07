@@ -60,9 +60,9 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
 
   if (!property) return null;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmissionErrors([]);
-    const res = submitUnderwriting(selectedPropertyZpid);
+    const res = await submitUnderwriting(selectedPropertyZpid);
     if (res.success) {
       onViewEvaluation();
     } else if (res.errors) {

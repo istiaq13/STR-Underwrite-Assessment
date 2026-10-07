@@ -25,7 +25,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   };
 
   const getRatingColor = () => {
-    if (property.best_rating === "best") return "text-emerald-600";
+    if (property.best_rating === "best") return "text-[#52A68B]";
     if (property.best_rating === "medium") return "text-amber-600";
     if (property.best_rating === "low") return "text-rose-600";
     return "text-neutral-800";
@@ -55,7 +55,19 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
       id={`property-card-${property.zpid}`}
       className="bg-white rounded-2xl border border-zinc-200/90 overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between group"
     >
-      <div>
+      <div
+        onClick={() => onSelect(property.zpid)}
+        className="cursor-pointer"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onSelect(property.zpid);
+          }
+        }}
+        title={`Open underwriting for ${property.address_street}`}
+      >
         {/* Card Image / Header */}
         <div className="relative aspect-[16/10] bg-zinc-100 overflow-hidden">
           <img
@@ -63,7 +75,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             alt={property.address}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 pointer-events-none">
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/95 text-zinc-800 shadow-sm backdrop-blur-md border border-zinc-200/60 flex items-center gap-1">
               <MapPin className="w-3 h-3 text-[#52A68B]" />
               <span>{property.market_name}</span>
@@ -75,7 +87,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         <div className="p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <h3 className="font-semibold text-zinc-900 text-sm sm:text-base leading-snug line-clamp-1 tracking-tight">
+              <h3 className="font-semibold text-zinc-900 text-sm sm:text-base leading-snug line-clamp-1 tracking-tight group-hover:text-[#52A68B] transition-colors">
                 {property.address_street}
               </h3>
               <p className="text-xs text-zinc-500 mt-1 font-normal flex items-center gap-1.5">
@@ -157,19 +169,40 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
 
       {/* Action footer */}
       <div className="p-4 pt-0">
-        <button
-          id={`btn-select-${property.zpid}`}
-          onClick={() => onSelect(property.zpid)}
-          className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all duration-200 cursor-pointer text-center ${
-            property.status === "submitted"
-              ? "bg-[#EBF5F1] text-[#52A68B] hover:bg-[#52A68B] hover:text-white border border-[#52A68B]/40"
-              : property.status === "in_progress"
-              ? "bg-[#52A68B] text-white hover:bg-[#438a72] shadow-sm shadow-[#52A68B]/25"
-              : "border border-[#52A68B] text-[#52A68B] bg-white hover:bg-[#52A68B] hover:text-white shadow-sm"
-          }`}
-        >
-          {getButtonText()}
-        </button>
+        {property.status === "submitted" && property.latest_submission_id && onViewResults ? (
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              id={`btn-scorecard-${property.zpid}`}
+              onClick={() => onViewResults(String(property.latest_submission_id))}
+              className="w-full py-2.5 px-2 rounded-xl text-xs font-semibold tracking-wide bg-[#52A68B] text-white hover:bg-[#438a72] transition-all duration-200 cursor-pointer text-center shadow-sm truncate"
+              title="View Graded Scorecard / Gradesheet"
+            >
+              View Gradesheet
+            </button>
+            <button
+              type="button"
+              id={`btn-select-${property.zpid}`}
+              onClick={() => onSelect(property.zpid)}
+              className="w-full py-2.5 px-2 rounded-xl text-xs font-semibold tracking-wide bg-[#EBF5F1] text-[#52A68B] hover:bg-[#52A68B] hover:text-white border border-[#52A68B]/40 transition-all duration-200 cursor-pointer text-center shadow-sm truncate"
+              title="Review & Re-underwrite Deal"
+            >
+              Review
+            </button>
+          </div>
+        ) : (
+          <button
+            id={`btn-select-${property.zpid}`}
+            onClick={() => onSelect(property.zpid)}
+            className={`w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold tracking-wide transition-all duration-200 cursor-pointer text-center ${
+              property.status === "in_progress"
+                ? "bg-[#52A68B] text-white hover:bg-[#438a72] shadow-sm shadow-[#52A68B]/25"
+                : "border border-[#52A68B] text-[#52A68B] bg-white hover:bg-[#52A68B] hover:text-white shadow-sm"
+            }`}
+          >
+            {getButtonText()}
+          </button>
+        )}
       </div>
     </div>
   );

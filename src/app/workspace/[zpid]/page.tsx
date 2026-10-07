@@ -3,12 +3,12 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useUnderwriting } from "@/lib/context";
-import { createDraftUnderwriting } from "@/lib/mockData";
 import { PropertyHeader } from "@/components/workspace/PropertyHeader";
 import { FinancialsTab } from "@/components/workspace/FinancialsTab";
 import { AnalysisTab } from "@/components/workspace/AnalysisTab";
 import { DealTagsTab } from "@/components/workspace/DealTagsTab";
 import { ReviewTab } from "@/components/workspace/ReviewTab";
+import { WorkspaceSkeleton } from "@/components/workspace/WorkspaceSkeleton";
 import {
   DollarSign,
   TrendingUp,
@@ -27,7 +27,10 @@ export default function WorkspacePage() {
     selectedPropertyZpid,
     properties,
     markets,
+    isLoadingDashboard,
+    isLoadingDraft,
     selectProperty,
+    finishOpeningProperty,
     updateDraft,
     saveDraft,
     resetDraft,
@@ -45,25 +48,34 @@ export default function WorkspacePage() {
     }
   }, [zpid, selectedPropertyZpid, selectProperty]);
 
+  // Dismiss top loading bar and dull overlay once workspace is mounted and ready
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      finishOpeningProperty();
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [finishOpeningProperty]);
+
   const property = properties.find((p) => p.zpid === zpid);
   const market = markets.find((m) => m.id === property?.market_id);
 
-  // Fallback to avoid flash or delay during route transitions
   const currentDraft = useMemo(() => {
     if (activeDraft && activeDraft.zpid === zpid) {
       return activeDraft;
     }
-    if (property) {
-      return createDraftUnderwriting(property);
-    }
     return null;
-  }, [activeDraft, zpid, property]);
+  }, [activeDraft, zpid]);
+
+  // If loading or initializing from backend, show wave skeleton
+  if (isLoadingDashboard || isLoadingDraft || (!currentDraft && !property)) {
+    return <WorkspaceSkeleton />;
+  }
 
   if (!property || !currentDraft) {
     return (
       <div className="text-center py-16 bg-white rounded-xl border border-slate-200 p-8">
         <p className="text-base font-semibold text-slate-800">Property not found</p>
-        <p className="text-xs text-slate-500 mt-1">Unable to locate listing for ZPID: {zpid}</p>
+        <p className="text-xs text-slate-500 mt-1">Unable to locate listing or draft for ZPID: {zpid}</p>
         <button
           onClick={() => router.push("/")}
           className="mt-4 px-4 py-2 text-xs font-semibold text-white bg-slate-900 rounded-lg hover:bg-slate-800"
@@ -74,9 +86,9 @@ export default function WorkspacePage() {
     );
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmissionErrors([]);
-    const res = submitUnderwriting(zpid);
+    const res = await submitUnderwriting(zpid);
     if (res.success) {
       router.push("/evaluation");
     } else if (res.errors) {
@@ -164,6 +176,7 @@ export default function WorkspacePage() {
             draft={currentDraft}
             onSubmit={handleSubmit}
             onPrefillReference={() => prefillFromReference(zpid)}
+            isSubmitting={isSaving}
           />
         )}
       </div>

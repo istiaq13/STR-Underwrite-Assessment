@@ -1,6 +1,7 @@
 import React from "react";
 import { Property, Market } from "@/types";
 import { StatusBadge, RatingBadge } from "@/components/ui/Badge";
+import { sanitizeUrl } from "@/lib/security";
 import {
   ArrowLeft,
   ExternalLink,
@@ -67,9 +68,9 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
             id="btn-save-draft"
             onClick={onSave}
             disabled={isSaving}
-            className="px-3 py-1.5 text-xs font-semibold text-white bg-zinc-900 hover:bg-zinc-800 rounded-lg transition flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 text-xs font-semibold text-white bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
-            <Save className="w-3.5 h-3.5" />
+            <Save className={`w-3.5 h-3.5 ${isSaving ? "animate-spin" : ""}`} />
             <span>{isSaving ? "Saving..." : "Save Draft"}</span>
           </button>
         </div>
@@ -124,9 +125,9 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
               <span>{property.time_on_zillow}</span>
             </div>
             <a
-              href={property.detail_url}
+              href={sanitizeUrl(property.detail_url)}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="text-zinc-900 font-semibold hover:underline inline-flex items-center gap-1"
             >
               <span>View Listing</span>

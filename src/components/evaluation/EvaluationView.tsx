@@ -12,6 +12,7 @@ import {
   Target,
   Award,
   TrendingUp,
+  History,
 } from "lucide-react";
 
 interface EvaluationViewProps {
@@ -25,7 +26,7 @@ export const EvaluationView: React.FC<EvaluationViewProps> = ({
   onReattempt,
   onOpenLeaderboard,
 }) => {
-  const { latestSubmission, leaderboard } = useUnderwriting();
+  const { latestSubmission, leaderboard, submissions, setLatestSubmission } = useUnderwriting();
 
   if (!latestSubmission) {
     return (
@@ -54,6 +55,8 @@ export const EvaluationView: React.FC<EvaluationViewProps> = ({
   const rawPosition = ((breakdown.candidate - spectrumMin) / (spectrumMax - spectrumMin)) * 100;
   const clampedPosition = Math.min(Math.max(rawPosition, 5), 95);
 
+  const propertySubmissions = submissions.filter((s) => s.zpid === latestSubmission.zpid);
+
   return (
     <div className="space-y-6">
       {/* 1. Main Score Header Card */}
@@ -76,12 +79,12 @@ export const EvaluationView: React.FC<EvaluationViewProps> = ({
           <div className="flex items-center justify-center gap-3">
             <span
               id="score-accuracy-display"
-              className={`text-6xl sm:text-7xl font-extrabold font-mono tracking-tight tabular-nums ${
+              className={`text-6xl sm:text-7xl font-black font-mono tracking-tight tabular-nums ${
                 latestSubmission.rating === "best"
-                  ? "text-emerald-700"
+                  ? "text-[#52A68B]"
                   : latestSubmission.rating === "medium"
-                  ? "text-amber-700"
-                  : "text-rose-700"
+                  ? "text-amber-600"
+                  : "text-rose-600"
               }`}
             >
               {latestSubmission.accuracy}
@@ -403,7 +406,86 @@ export const EvaluationView: React.FC<EvaluationViewProps> = ({
         </CardContent>
       </Card>
 
-      {/* 4. Leaderboard & Next Steps Banner */}
+      {/* 4. Historical Attempts per Property */}
+      {propertySubmissions.length > 0 && (
+        <Card id="card-attempt-history">
+          <CardHeader
+            title="Attempt History for this Property"
+            subtitle={`${propertySubmissions.length} graded attempt${propertySubmissions.length > 1 ? "s" : ""} recorded in PostgreSQL for this property.`}
+          />
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
+                    <th className="pb-3">Attempt</th>
+                    <th className="pb-3">Submitted At</th>
+                    <th className="pb-3 text-right">Mid Revenue</th>
+                    <th className="pb-3 text-right">Accuracy</th>
+                    <th className="pb-3 text-center">Rating</th>
+                    <th className="pb-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100 font-mono tabular-nums">
+                  {propertySubmissions.map((sub, index) => {
+                    const isCurrent = sub.id === latestSubmission.id;
+                    const attemptNumber = propertySubmissions.length - index;
+                    return (
+                      <tr
+                        key={sub.id}
+                        className={`hover:bg-zinc-50/50 transition ${isCurrent ? "bg-amber-50/30 font-semibold" : ""}`}
+                      >
+                        <td className="py-2.5 font-sans text-zinc-900">
+                          <span className="inline-flex items-center gap-1.5">
+                            Attempt #{attemptNumber}
+                            {isCurrent && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-white font-bold">
+                                Active
+                              </span>
+                            )}
+                          </span>
+                        </td>
+                        <td className="py-2.5 font-sans text-zinc-600">
+                          {new Date(sub.submitted_at).toLocaleString([], {
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                        <td className="py-2.5 text-right font-sans">
+                          {formatCurrency(sub.breakdown.candidate)}
+                        </td>
+                        <td className="py-2.5 text-right font-bold text-zinc-900">
+                          {sub.accuracy}%
+                        </td>
+                        <td className="py-2.5 text-center font-sans">
+                          <RatingBadge rating={sub.rating} />
+                        </td>
+                        <td className="py-2.5 text-right font-sans">
+                          {isCurrent ? (
+                            <span className="text-zinc-400 text-[11px] font-medium">Viewing</span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setLatestSubmission(sub)}
+                              className="px-2.5 py-1 text-[11px] font-semibold text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 transition shadow-sm cursor-pointer"
+                            >
+                              View Scorecard
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 5. Leaderboard & Next Steps Banner */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-zinc-50/80 border border-zinc-200">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold shadow-sm">

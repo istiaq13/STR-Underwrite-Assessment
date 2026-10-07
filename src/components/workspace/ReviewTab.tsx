@@ -1,6 +1,7 @@
 import React from "react";
 import { UnderwritingData } from "@/types";
 import { formatCurrency, formatPercent } from "@/lib/calculations";
+import { validateUnderwritingDraft } from "@/lib/schemas";
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import {
   CheckCircle2,
@@ -18,19 +19,32 @@ interface ReviewTabProps {
   draft: UnderwritingData;
   onSubmit: () => void;
   onPrefillReference: () => void;
+  isSubmitting?: boolean;
 }
 
 export const ReviewTab: React.FC<ReviewTabProps> = ({
   draft,
   onSubmit,
   onPrefillReference,
+  isSubmitting = false,
 }) => {
   const pd = draft.purchase_details;
   const rev = draft.forecasted_revenue;
   const calc = draft.calculations;
 
+  // Run real-time Zod schema validation
+  const zodResult = validateUnderwritingDraft(draft);
+
   // Validation logic
   const validations = [
+    {
+      label: "Zod Schema & Data Integrity",
+      valid: zodResult.success,
+      message: zodResult.success
+        ? "All fields pass strict Zod schema validation & type constraints"
+        : zodResult.errors[0] || "Schema validation issues found",
+      isPrimary: true,
+    },
     {
       label: "Purchase details valid",
       valid: pd.purchase_price > 0 && pd.interest_rate > 0 && pd.down_payment_pct > 0,
@@ -265,15 +279,24 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
           <button
             id="btn-submit-underwriting"
             onClick={onSubmit}
-            disabled={!allValid}
+            disabled={!allValid || isSubmitting}
             className={`w-full md:w-auto px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-lg transition ${
-              allValid
+              allValid && !isSubmitting
                 ? "bg-white text-slate-900 hover:bg-slate-100 hover:scale-[1.02] cursor-pointer"
                 : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
             }`}
           >
-            <span>Submit for Grading</span>
-            <Send className="w-4 h-4" />
+            {isSubmitting ? (
+              <>
+                <span className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                <span>Submitting & Grading...</span>
+              </>
+            ) : (
+              <>
+                <span>Submit for Grading</span>
+                <Send className="w-4 h-4" />
+              </>
+            )}
           </button>
           {!allValid && (
             <p className="text-[11px] text-rose-400 mt-2 text-center md:text-right">

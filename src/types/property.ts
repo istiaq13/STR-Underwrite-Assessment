@@ -31,3 +31,68 @@ export interface Property {
   active_underwriting_id: string | null;
   latest_submission_id: string | null;
 }
+
+export interface DashboardSummary {
+  total_properties: number;
+  submitted: number;
+  in_progress: number;
+  not_started: number;
+  average_accuracy: number | null;
+}
+
+export interface BackendDashboardProperty {
+  zpid: string;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  zipcode: string | null;
+  price: string | null;
+  unformatted_price: string | number | null;
+  beds: number | null;
+  baths: number | null;
+  area: number | null;
+  img_src: string | null;
+  detail_url: string | null;
+  home_type: string | null;
+  market_id: number | null;
+  market_name: string | null;
+  status: string;
+  attempts: number;
+  latest_accuracy: number | null;
+  latest_rating: Rating | null;
+  best_accuracy: number | null;
+  best_rating: Rating | null;
+  active_underwriting_id: number | null;
+  latest_submission_id: number | null;
+}
+
+export interface DashboardApiResponse {
+  summary: DashboardSummary;
+  properties: BackendDashboardProperty[];
+}
+
+export interface PropertyRead {
+  zpid: string;
+  img_src?: string | null;
+  detail_url?: string | null;
+  price?: string | null;
+  unformatted_price?: string | null;
+  address?: string | null;
+  address_street?: string | null;
+  address_city?: string | null;
+  address_state?: string | null;
+  address_zipcode?: string | null;
+  beds?: number | null;
+  baths?: number | null;
+  area?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  home_type?: string | null;
+  home_status?: string | null;
+  time_on_zillow?: string | null;
+  flex_text?: string | null;
+  market_id?: number | null;
+  market?: { id: number; name: string; slug?: string } | null;
+  created_at?: string | null;
+}
+

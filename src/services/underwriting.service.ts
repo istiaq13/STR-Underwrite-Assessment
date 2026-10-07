@@ -1,14 +1,14 @@
 import { Property, UnderwritingData } from "@/types";
-import { REFERENCE_UNDERWRITINGS, createDraftUnderwriting } from "@/lib/mockData";
 import { calculateUnderwriting } from "@/lib/calculations";
+import { createUnderwriting, fetchUnderwriting } from "@/lib/api";
 
 export class UnderwritingService {
-  static createDraft(property: Property): UnderwritingData {
-    return createDraftUnderwriting(property);
+  static async createDraft(property: Property): Promise<UnderwritingData> {
+    return createUnderwriting(property.zpid);
   }
 
-  static getReference(zpid: string): UnderwritingData | undefined {
-    return REFERENCE_UNDERWRITINGS[zpid];
+  static async getReference(referenceUnderwritingId: number | string): Promise<UnderwritingData> {
+    return fetchUnderwriting(referenceUnderwritingId);
   }
 
   static recalculate(draft: UnderwritingData): UnderwritingData {

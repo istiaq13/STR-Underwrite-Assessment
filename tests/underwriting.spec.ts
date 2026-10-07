@@ -11,7 +11,7 @@ test.describe("STR Underwriting Training Platform", () => {
 
   test("1. Dashboard renders available properties, metrics, and market filters", async ({ page }) => {
     // Check main title
-    await expect(page.locator("h1")).toContainText("Short-Term Rental Property Underwriting Practice");
+    await expect(page.locator("h1")).toContainText(/dream residence|Short-Term Rental Property/);
 
     // Check metric cards
     await expect(page.getByText("Available Cases")).toBeVisible();

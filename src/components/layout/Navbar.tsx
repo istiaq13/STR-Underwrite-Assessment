@@ -141,13 +141,7 @@ export const Navbar: React.FC = () => {
                     Evaluation Results
                   </span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                      latestSubmission.rating === "best"
-                        ? "bg-emerald-100 text-emerald-800"
-                        : latestSubmission.rating === "medium"
-                        ? "bg-amber-100 text-amber-800"
-                        : "bg-rose-100 text-rose-800"
-                    }`}
+                    className="text-[10px] px-2 py-0.5 rounded-full font-bold font-mono bg-[#EBF5F1] text-[#52A68B] border border-[#52A68B]/30 shadow-2xs"
                   >
                     {latestSubmission.accuracy}
                   </span>
@@ -254,9 +248,12 @@ export const Navbar: React.FC = () => {
               <Link
                 href="/evaluation"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-800 hover:bg-[#EBF5F1] hover:text-[#52A68B]"
+                className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-neutral-800 hover:bg-[#EBF5F1] hover:text-[#52A68B]"
               >
-                Evaluation Results ({latestSubmission.accuracy})
+                <span>Evaluation Results</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold font-mono bg-[#EBF5F1] text-[#52A68B] border border-[#52A68B]/30">
+                  {latestSubmission.accuracy}
+                </span>
               </Link>
             )}
             <Link

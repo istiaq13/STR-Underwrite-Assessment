@@ -7,9 +7,10 @@ import { DashboardView } from "@/components/dashboard/DashboardView";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { selectProperty } = useUnderwriting();
+  const { selectProperty, startOpeningProperty } = useUnderwriting();
 
   const handleSelectProperty = (zpid: string) => {
+    startOpeningProperty(zpid);
     selectProperty(zpid);
     router.push(`/workspace/${zpid}`);
   };

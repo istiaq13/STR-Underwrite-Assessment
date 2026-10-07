@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ChevronDown, Search } from "lucide-react";
 import { useUnderwriting } from "@/lib/context";
+import { fetchProperties } from "@/lib/api";
 import { PropertyCard } from "./PropertyCard";
+import { PropertyCardSkeleton } from "./PropertyCardSkeleton";
+import { DashboardStats } from "./DashboardStats";
 
 interface DashboardViewProps {
   onSelectProperty: (zpid: string) => void;
@@ -13,29 +17,76 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({
   onSelectProperty,
 }) => {
-  const { properties } = useUnderwriting();
+  const router = useRouter();
+  const {
+    properties,
+    markets,
+    dashboardSummary,
+    isLoadingDashboard,
+    dashboardError,
+    refreshDashboard,
+    startOpeningProperty,
+  } = useUnderwriting();
   const [selectedMarketId, setSelectedMarketId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [matchingZpids, setMatchingZpids] = useState<string[] | null>(null);
+  const [isSearchingCatalog, setIsSearchingCatalog] = useState(false);
+
+  // Calls GET /api/properties?search= over the wire when user types in search box
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setMatchingZpids(null);
+      setIsSearchingCatalog(false);
+      return;
+    }
+
+    let isMounted = true;
+    setIsSearchingCatalog(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const results = await fetchProperties(
+          searchQuery.trim(),
+          selectedMarketId ?? undefined
+        );
+        if (isMounted) {
+          setMatchingZpids(results.map((r) => r.zpid));
+        }
+      } catch (err) {
+        console.warn("Backend property catalog query failed:", err);
+      } finally {
+        if (isMounted) setIsSearchingCatalog(false);
+      }
+    }, 200);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [searchQuery, selectedMarketId]);
 
   const filteredProperties = properties.filter((p) => {
-    // Market filter
+    // 1. Instant Market filter (Instant 0ms synchronous filter)
     if (selectedMarketId !== null && p.market_id !== selectedMarketId) {
       return false;
     }
-    // Status filter
-    if (statusFilter === "completed" && p.status !== "submitted") return false;
-    if (statusFilter === "in_progress" && p.status !== "in_progress") return false;
-    if (statusFilter === "not_started" && p.status !== "not_started") return false;
 
-    // Search query
-    if (searchQuery.trim()) {
+    // 2. Search query filter (instant local match + backend catalog sync)
+    if (matchingZpids !== null) {
+      if (!matchingZpids.includes(p.zpid)) return false;
+    } else if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchAddress = p.address.toLowerCase().includes(q);
       const matchCity = p.address_city.toLowerCase().includes(q);
       const matchMarket = p.market_name.toLowerCase().includes(q);
-      return matchAddress || matchCity || matchMarket;
+      if (!matchAddress && !matchCity && !matchMarket) return false;
     }
+
+    // Status filter
+    if (statusFilter === "completed" && p.status !== "submitted") return false;
+    if (statusFilter === "in_progress" && p.status !== "in_progress") return false;
+    if (statusFilter === "not_started" && p.status !== "not_started") return false;
 
     return true;
   });
@@ -48,12 +99,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     // When clicking search, filter by location if matching a market
     const loc = selectedLocation.toLowerCase().trim();
     if (loc) {
-      if (loc.includes("broken bow")) setSelectedMarketId(1);
-      else if (loc.includes("pigeon forge") || loc.includes("smoky") || loc.includes("blue ridge")) setSelectedMarketId(2);
-      else if (loc.includes("joshua tree") || loc.includes("california")) setSelectedMarketId(3);
-      else if (loc.includes("austin") || loc.includes("texas")) setSelectedMarketId(4);
-      else if (loc.includes("florida") || loc.includes("orlando")) setSelectedMarketId(3);
-      else {
+      const match = markets.find(
+        (m) => m.name.toLowerCase() === loc || (m.slug && m.slug.toLowerCase() === loc)
+      );
+      if (match) {
+        setSelectedMarketId(match.id);
+        setSearchQuery("");
+      } else {
         setSelectedMarketId(null);
         setSearchQuery(selectedLocation);
       }
@@ -81,13 +133,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Center / Left Content Container */}
         <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10 my-auto py-8 sm:py-12">
           <div className="max-w-xl lg:max-w-2xl xl:max-w-3xl space-y-6">
-            {/* Pill Tag */}
-            <div>
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#52A68B] bg-[#EBF5F1] px-3.5 py-1.5 rounded-md inline-block">
-                Real Estate
-              </span>
-            </div>
-
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-[58px] xl:text-[64px] font-extrabold text-[#1E293B] leading-[1.12] tracking-tight">
               Let&apos;s hunt for your <br />
@@ -119,9 +164,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <select
                       value={selectedLocation}
                       onChange={(e) => setSelectedLocation(e.target.value)}
-                      className="w-full text-xs sm:text-sm font-medium text-neutral-400 bg-transparent focus:outline-none cursor-pointer appearance-none truncate pr-5"
+                      className="w-full text-xs sm:text-sm font-medium text-neutral-700 bg-transparent focus:outline-none cursor-pointer appearance-none truncate pr-5"
                     >
-                      <option value="">Choose location</option>
+                      <option value="">All Markets & Locations</option>
+                      {markets.map((m) => (
+                        <option key={m.id} value={m.name} className="text-neutral-800">
+                          {m.name} ({m.property_count} listings)
+                        </option>
+                      ))}
                     </select>
                     <ChevronDown className="w-4 h-4 text-[#94A3B8] flex-shrink-0 pointer-events-none absolute right-0" strokeWidth={2} />
                   </div>
@@ -189,22 +239,129 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         id="recommendations"
         className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 pt-16 sm:pt-24 pb-20 scroll-mt-20 border-t border-neutral-100"
       >
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-          <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#52A68B] bg-[#EBF5F1] px-3 py-1.5 rounded inline-block mb-3">
-              Discover
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1E293B] tracking-tight">
-              Best recomendation
-            </h2>
-            <p className="text-sm text-neutral-400 max-w-lg mt-2 leading-relaxed">
-              Discover our exclusive selection of the finest one-of-a-kind luxury properties architectural masterpieces.
-            </p>
+        <div className="mb-6">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1E293B] tracking-tight">
+            Best recomendation
+          </h2>
+          <p className="text-sm text-neutral-400 max-w-lg mt-1 leading-relaxed">
+            Discover our exclusive selection of the finest one-of-a-kind luxury properties architectural masterpieces.
+          </p>
+        </div>
+
+        {dashboardError && (
+          <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+            <div className="text-xs">
+              <span className="font-bold">Backend Connection Notice: </span>
+              {dashboardError}. Ensure your FastAPI backend is running on <code className="bg-amber-100/80 px-1.5 py-0.5 rounded font-mono">http://localhost:8000</code>.
+            </div>
+            <button
+              type="button"
+              onClick={() => refreshDashboard()}
+              className="text-xs font-semibold bg-amber-200 hover:bg-amber-300 text-amber-900 px-3 py-1.5 rounded-lg transition cursor-pointer flex-shrink-0"
+            >
+              Retry Connection
+            </button>
+          </div>
+        )}
+
+        {/* Training KPI Dashboard Stats */}
+        <div className="mb-8">
+          <DashboardStats
+            properties={properties}
+            summary={dashboardSummary}
+            isLoading={isLoadingDashboard}
+          />
+        </div>
+
+        {/* Modern Filter Toolbar & Reshaped Search Box */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 mb-6">
+          {markets.length > 0 && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-1">
+              <button
+                type="button"
+                id="market-filter-all"
+                onClick={() => setSelectedMarketId(null)}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 flex items-center gap-2 border ${
+                  selectedMarketId === null
+                    ? "bg-[#52A68B] text-white border-[#52A68B] shadow-sm shadow-[#52A68B]/25"
+                    : "bg-white text-neutral-600 border-neutral-200/90 hover:bg-[#EBF5F1]/70 hover:text-[#52A68B] hover:border-[#52A68B]/40"
+                }`}
+              >
+                <span>All Markets</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${
+                    selectedMarketId === null
+                      ? "bg-white/20 text-white font-bold"
+                      : "bg-neutral-100 text-neutral-600 font-medium"
+                  }`}
+                >
+                  {properties.length}
+                </span>
+              </button>
+              {markets.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  id={`market-filter-${m.id}`}
+                  onClick={() => setSelectedMarketId(m.id === selectedMarketId ? null : m.id)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 flex items-center gap-2 border ${
+                    selectedMarketId === m.id
+                      ? "bg-[#52A68B] text-white border-[#52A68B] shadow-sm shadow-[#52A68B]/25"
+                      : "bg-white text-neutral-600 border-neutral-200/90 hover:bg-[#EBF5F1]/70 hover:text-[#52A68B] hover:border-[#52A68B]/40"
+                  }`}
+                >
+                  <span>{m.name}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${
+                      selectedMarketId === m.id
+                        ? "bg-white/20 text-white font-bold"
+                        : "bg-neutral-100 text-neutral-600 font-medium"
+                    }`}
+                  >
+                    {m.property_count}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Reshaped Modern Search Box */}
+          <div className="relative min-w-[260px] sm:min-w-[300px]">
+            <div className="flex items-center h-10 px-3.5 bg-white border border-neutral-200/90 rounded-xl shadow-xs transition-all duration-200 focus-within:border-[#52A68B] focus-within:ring-2 focus-within:ring-[#52A68B]/15 focus-within:shadow-sm">
+              <Search
+                className={`w-4 h-4 mr-2.5 flex-shrink-0 transition-colors ${
+                  isSearchingCatalog ? "text-[#52A68B] animate-pulse" : "text-neutral-400"
+                }`}
+              />
+              <input
+                type="text"
+                placeholder="Search properties or addresses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 bg-transparent focus:outline-none font-medium"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="ml-2 w-4 h-4 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-800 flex items-center justify-center text-[10px] font-bold transition flex-shrink-0 cursor-pointer"
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Properties Grid */}
-        {filteredProperties.length === 0 ? (
+        {isLoadingDashboard && properties.length === 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <PropertyCardSkeleton key={n} />
+            ))}
+          </div>
+        ) : filteredProperties.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-neutral-200 p-8">
             <p className="text-sm font-semibold text-neutral-700">No properties found</p>
             <p className="text-xs text-neutral-400 mt-1">Try selecting another location or property type.</p>
@@ -226,6 +383,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 key={property.zpid}
                 property={property}
                 onSelect={onSelectProperty}
+                onViewResults={(subId) => {
+                  startOpeningProperty();
+                  router.push(`/evaluation?id=${subId}`);
+                }}
               />
             ))}
           </div>
