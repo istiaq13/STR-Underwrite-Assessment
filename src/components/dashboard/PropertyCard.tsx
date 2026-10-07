@@ -174,7 +174,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
 
       {/* Action footer */}
       <div className="p-4 pt-0">
-        {property.status === "submitted" && property.latest_submission_id && onViewResults ? (
+        {isSubmitted && property.latest_submission_id && onViewResults ? (
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
