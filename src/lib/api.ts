@@ -197,25 +197,46 @@ export function mapBackendUnderwriting(raw: BackendUnderwritingRead): Underwriti
 
   const purchaseDetails: PurchaseDetailsInput = {
     purchase_price: purchasePrice,
-    down_payment_pct: raw.detail?.purchase_details?.down_payment_pct ?? 0.2,
-    interest_rate: raw.detail?.purchase_details?.interest_rate ?? 0.0699,
-    mortgage_years: raw.detail?.purchase_details?.mortgage_years ?? 30,
-    closing_costs_pct: raw.detail?.purchase_details?.closing_costs_pct ?? 0.03,
+    down_payment_pct:
+      raw.detail?.purchase_details?.down_payment_pct != null
+        ? Number(raw.detail.purchase_details.down_payment_pct)
+        : 0.2,
+    interest_rate:
+      raw.detail?.purchase_details?.interest_rate != null
+        ? Number(raw.detail.purchase_details.interest_rate)
+        : 0.0699,
+    mortgage_years:
+      raw.detail?.purchase_details?.mortgage_years != null
+        ? Number(raw.detail.purchase_details.mortgage_years)
+        : 30,
+    closing_costs_pct:
+      raw.detail?.purchase_details?.closing_costs_pct != null
+        ? Number(raw.detail.purchase_details.closing_costs_pct)
+        : 0.03,
   };
 
   const forecastedRevenue: ForecastedRevenueInput = {
-    co_hosting_fee_pct: raw.detail?.forecasted_revenue?.co_hosting_fee_pct ?? 0,
-    annual_re_appreciation_pct: raw.detail?.forecasted_revenue?.annual_re_appreciation_pct ?? 0.03,
-    low_revenue: raw.low_gross_revenue ? Number(raw.low_gross_revenue) : 0,
-    mid_revenue: raw.mid_gross_revenue ? Number(raw.mid_gross_revenue) : 0,
-    high_revenue: raw.high_gross_revenue ? Number(raw.high_gross_revenue) : 0,
+    co_hosting_fee_pct:
+      raw.detail?.forecasted_revenue?.co_hosting_fee_pct != null
+        ? Number(raw.detail.forecasted_revenue.co_hosting_fee_pct)
+        : 0,
+    annual_re_appreciation_pct:
+      raw.detail?.forecasted_revenue?.annual_re_appreciation_pct != null
+        ? Number(raw.detail.forecasted_revenue.annual_re_appreciation_pct)
+        : 0.03,
+    low_revenue: raw.low_gross_revenue != null ? Number(raw.low_gross_revenue) : 0,
+    mid_revenue: raw.mid_gross_revenue != null ? Number(raw.mid_gross_revenue) : 0,
+    high_revenue: raw.high_gross_revenue != null ? Number(raw.high_gross_revenue) : 0,
   };
 
   const taxes: TaxesInput = {
-    land_assumptions_pct: raw.taxes?.land_assumptions_pct ? Number(raw.taxes.land_assumptions_pct) : 0.2,
-    sla_multiplier_pct: raw.taxes?.sla_multiplier_pct ? Number(raw.taxes.sla_multiplier_pct) : 0.25,
-    bonus_amount_pct: raw.taxes?.bonus_amount_pct ? Number(raw.taxes.bonus_amount_pct) : 0.6,
-    tax_rate_pct: raw.taxes?.tax_rate_pct ? Number(raw.taxes.tax_rate_pct) : 0.37,
+    land_assumptions_pct:
+      raw.taxes?.land_assumptions_pct != null ? Number(raw.taxes.land_assumptions_pct) : 0.2,
+    sla_multiplier_pct:
+      raw.taxes?.sla_multiplier_pct != null ? Number(raw.taxes.sla_multiplier_pct) : 0.25,
+    bonus_amount_pct:
+      raw.taxes?.bonus_amount_pct != null ? Number(raw.taxes.bonus_amount_pct) : 0.6,
+    tax_rate_pct: raw.taxes?.tax_rate_pct != null ? Number(raw.taxes.tax_rate_pct) : 0.37,
   };
 
   const optimizationItems: OptimizationItem[] = (raw.optimization_items || []).map((item, index) => ({

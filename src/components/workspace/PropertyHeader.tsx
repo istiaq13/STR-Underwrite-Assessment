@@ -7,7 +7,7 @@ import {
   ExternalLink,
   Save,
   RotateCcw,
-  Sparkles,
+  Target,
   MapPin,
   Bed,
   Bath,
@@ -47,20 +47,21 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={onPrefillReference}
-            title="Prefill with senior analyst reference data for testing/grading verification"
-            className="px-2.5 py-1 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 transition flex items-center gap-1.5 shadow-sm"
+            title="Load Analyst Benchmark"
+            aria-label="Load Analyst Benchmark"
+            className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-zinc-200 text-zinc-700 hover:bg-[#EBF5F1]/60 hover:text-[#52A68B] hover:border-[#52A68B]/40 transition shadow-xs cursor-pointer"
           >
-            <Sparkles className="w-3 h-3 text-amber-500" />
-            <span>Load Analyst Benchmark</span>
+            <Target className="w-3.5 h-3.5" />
           </button>
 
           <button
             onClick={onReset}
-            className="p-1.5 text-zinc-400 hover:text-zinc-800 rounded-lg hover:bg-zinc-100 transition"
+            className="w-8 h-8 rounded-lg flex items-center justify-center bg-white border border-zinc-200 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-50 hover:border-zinc-300 transition shadow-xs cursor-pointer"
             title="Reset form"
+            aria-label="Reset form"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
@@ -69,10 +70,11 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
             id="btn-save-draft"
             onClick={onSave}
             disabled={isSaving}
-            className="px-3 py-1.5 text-xs font-semibold text-white bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+            title="Save Draft"
+            aria-label="Save Draft"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-[#52A68B] hover:bg-[#438a73] border border-[#52A68B] shadow-sm shadow-[#52A68B]/25 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
           >
-            <Save className={`w-3.5 h-3.5 ${isSaving ? "animate-spin" : ""}`} />
-            <span>{isSaving ? "Saving..." : "Save Draft"}</span>
+            <Save className={`w-3.5 h-3.5 text-white ${isSaving ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>

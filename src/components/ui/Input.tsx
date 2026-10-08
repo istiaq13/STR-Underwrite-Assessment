@@ -68,6 +68,7 @@ interface PercentageSliderInputProps {
   step?: number;
   helperText?: string;
   id?: string;
+  showBadge?: boolean;
 }
 
 export const PercentageSliderInput: React.FC<PercentageSliderInputProps> = ({
@@ -79,6 +80,7 @@ export const PercentageSliderInput: React.FC<PercentageSliderInputProps> = ({
   step = 1,
   helperText,
   id,
+  showBadge = false,
 }) => {
   const pctValue = Number((value * 100).toFixed(2));
 
@@ -91,9 +93,11 @@ export const PercentageSliderInput: React.FC<PercentageSliderInputProps> = ({
         >
           {label}
         </label>
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">
-          {pctValue}%
-        </span>
+        {showBadge && (
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">
+            {pctValue}%
+          </span>
+        )}
       </div>
       <div className="flex items-center gap-3">
         <input

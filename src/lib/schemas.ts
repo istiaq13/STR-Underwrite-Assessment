@@ -5,23 +5,23 @@ import { UnderwritingData } from "@/types";
  * 1. Purchase Details Schema
  */
 export const PurchaseDetailsSchema = z.object({
-  purchase_price: z
+  purchase_price: z.coerce
     .number()
     .positive("Purchase price must be greater than $0"),
-  down_payment_pct: z
+  down_payment_pct: z.coerce
     .number()
     .min(0, "Down payment cannot be negative")
     .max(1, "Down payment cannot exceed 100%"),
-  interest_rate: z
+  interest_rate: z.coerce
     .number()
     .positive("Interest rate must be greater than 0%")
     .max(0.3, "Interest rate cannot exceed 30%"),
-  mortgage_years: z
+  mortgage_years: z.coerce
     .number()
     .int("Mortgage term must be in whole years")
     .min(1, "Mortgage term must be at least 1 year")
     .max(50, "Mortgage term cannot exceed 50 years"),
-  closing_costs_pct: z
+  closing_costs_pct: z.coerce
     .number()
     .min(0, "Closing costs percentage cannot be negative")
     .max(0.15, "Closing costs cannot exceed 15%"),
@@ -32,21 +32,21 @@ export const PurchaseDetailsSchema = z.object({
  */
 export const ForecastedRevenueSchema = z
   .object({
-    co_hosting_fee_pct: z
+    co_hosting_fee_pct: z.coerce
       .number()
       .min(0, "Co-hosting fee cannot be negative")
       .max(0.5, "Co-hosting fee cannot exceed 50%"),
-    annual_re_appreciation_pct: z
+    annual_re_appreciation_pct: z.coerce
       .number()
       .min(-0.2, "Annual appreciation rate cannot be lower than -20%")
       .max(0.3, "Annual appreciation rate cannot exceed 30%"),
-    low_revenue: z
+    low_revenue: z.coerce
       .number()
       .min(0, "Low revenue forecast cannot be negative"),
-    mid_revenue: z
+    mid_revenue: z.coerce
       .number()
       .positive("Mid revenue forecast is required for analyst scoring and must be greater than $0"),
-    high_revenue: z
+    high_revenue: z.coerce
       .number()
       .min(0, "High revenue forecast cannot be negative"),
   })
@@ -69,19 +69,19 @@ export const ForecastedRevenueSchema = z
  * 3. Taxes & Depreciation Schema
  */
 export const TaxesSchema = z.object({
-  land_assumptions_pct: z
+  land_assumptions_pct: z.coerce
     .number()
     .min(0, "Land assumption cannot be negative")
     .max(1, "Land assumption cannot exceed 100%"),
-  sla_multiplier_pct: z
+  sla_multiplier_pct: z.coerce
     .number()
     .min(0, "Short-life asset multiplier cannot be negative")
     .max(1, "Short-life asset multiplier cannot exceed 100%"),
-  bonus_amount_pct: z
+  bonus_amount_pct: z.coerce
     .number()
     .min(0, "Bonus depreciation cannot be negative")
     .max(1, "Bonus depreciation cannot exceed 100%"),
-  tax_rate_pct: z
+  tax_rate_pct: z.coerce
     .number()
     .min(0, "Tax rate cannot be negative")
     .max(0.6, "Tax rate cannot exceed 60%"),
@@ -93,7 +93,7 @@ export const TaxesSchema = z.object({
 export const OptimizationItemSchema = z.object({
   id: z.string(),
   category: z.string().min(1, "Category is required"),
-  total_price: z.number().min(0, "Item cost cannot be negative"),
+  total_price: z.coerce.number().min(0, "Item cost cannot be negative"),
   notes: z.string().optional(),
 });
 
@@ -103,7 +103,7 @@ export const OptimizationItemSchema = z.object({
 export const OperatingExpenseSchema = z.object({
   id: z.string(),
   expense_name: z.string().min(1, "Expense item name is required"),
-  monthly_amount: z.number().min(0, "Expense amount cannot be negative"),
+  monthly_amount: z.coerce.number().min(0, "Expense amount cannot be negative"),
 });
 
 /**
@@ -131,9 +131,9 @@ export const SafeUrlSchema = z
 export const CompItemSchema = z.object({
   id: z.string(),
   listing_url: SafeUrlSchema,
-  revenue: z.number().min(0, "Comp revenue cannot be negative"),
-  bedrooms: z.number().min(0, "Comp bedrooms cannot be negative"),
-  sleeps: z.number().min(0, "Comp sleeps cannot be negative"),
+  revenue: z.coerce.number().min(0, "Comp revenue cannot be negative"),
+  bedrooms: z.coerce.number().min(0, "Comp bedrooms cannot be negative"),
+  sleeps: z.coerce.number().min(0, "Comp sleeps cannot be negative"),
   is_favourite: z.boolean().optional(),
 });
 
@@ -154,8 +154,8 @@ export const DealTagsSchema = z.object({
   waterfront: z.boolean(),
   remote: z.boolean(),
   can_support_cohost: z.boolean(),
-  renovation_level: z.number().min(0).max(5),
-  deal_complexity: z.number().min(0).max(5),
+  renovation_level: z.coerce.number().min(0).max(5),
+  deal_complexity: z.coerce.number().min(0).max(5),
 });
 
 /**
@@ -166,10 +166,10 @@ export const UnderwritingDataSchema = z
     id: z.string(),
     zpid: z.string().min(1, "Zillow Property ID (ZPID) is required"),
     updated_at: z.string().optional(),
-    bedrooms: z.number().min(0, "Bedrooms cannot be negative"),
-    bathrooms: z.number().min(0, "Bathrooms cannot be negative"),
-    sleep_count_low: z.number().min(0, "Sleep count low cannot be negative"),
-    sleep_count_high: z.number().min(0, "Sleep count high cannot be negative"),
+    bedrooms: z.coerce.number().min(0, "Bedrooms cannot be negative"),
+    bathrooms: z.coerce.number().min(0, "Bathrooms cannot be negative"),
+    sleep_count_low: z.coerce.number().min(0, "Sleep count low cannot be negative"),
+    sleep_count_high: z.coerce.number().min(0, "Sleep count high cannot be negative"),
     purchase_details: PurchaseDetailsSchema,
     forecasted_revenue: ForecastedRevenueSchema,
     taxes: TaxesSchema,
@@ -212,20 +212,11 @@ export function validateUnderwritingDraft(data: unknown): {
   const flattened = result.error.flatten();
   const fieldErrors = flattened.fieldErrors as Record<string, string[]>;
 
-  // Collect all unique user-friendly error messages
-  const errorMessages: string[] = [];
-
-  // Top-level form errors
-  if (flattened.formErrors && flattened.formErrors.length > 0) {
-    errorMessages.push(...flattened.formErrors);
-  }
-
-  // Individual field validation errors
-  for (const [field, messages] of Object.entries(fieldErrors)) {
-    if (messages && messages.length > 0) {
-      errorMessages.push(...messages);
-    }
-  }
+  // Collect all unique user-friendly error messages with field paths
+  const errorMessages: string[] = result.error.issues.map((issue) => {
+    const pathStr = issue.path.join(".");
+    return pathStr ? `${pathStr}: ${issue.message}` : issue.message;
+  });
 
   return {
     success: false,
