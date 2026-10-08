@@ -63,32 +63,32 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((stat, i) => {
         const Icon = stat.icon;
         return (
           <div
             key={i}
-            className="bg-white rounded-2xl border border-zinc-200/90 shadow-card p-4 transition-all hover:shadow-card-hover"
+            className="bg-white rounded-2xl border border-zinc-200/90 shadow-card p-3.5 sm:p-4 transition-all hover:shadow-card-hover"
           >
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 truncate">
                 {stat.label}
               </span>
-              <div className={`p-1.5 rounded-lg ${stat.accent}`}>
+              <div className={`p-1.5 rounded-lg flex-shrink-0 ${stat.accent}`}>
                 <Icon className="w-3.5 h-3.5" />
               </div>
             </div>
-            <div className="mt-3 flex items-baseline gap-2">
+            <div className="mt-2.5 sm:mt-3 flex items-baseline gap-2">
               {isLoading ? (
-                <div className="h-8 w-16 rounded-md skeleton-wave my-0.5" />
+                <div className="h-7 sm:h-8 w-16 rounded-md skeleton-wave my-0.5" />
               ) : (
-                <span className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 font-mono tabular-nums">
+                <span className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 font-mono tabular-nums">
                   {stat.value}
                 </span>
               )}
             </div>
-            <p className="mt-1 text-xs text-zinc-500 font-normal">{stat.subtext}</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-zinc-500 font-normal truncate">{stat.subtext}</p>
           </div>
         );
       })}

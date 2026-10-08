@@ -130,18 +130,18 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </div>
 
           {/* Key Specs */}
-          <div className="grid grid-cols-3 gap-2 py-3 my-3 border-y border-zinc-100 text-xs text-zinc-600">
-            <div className="flex items-center gap-1.5">
-              <Bed className="w-3.5 h-3.5 text-zinc-400" />
-              <span>{property.beds} Beds</span>
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 py-2.5 sm:py-3 my-2.5 sm:my-3 border-y border-zinc-100 text-[11px] sm:text-xs text-zinc-600">
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <Bed className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
+              <span className="truncate">{property.beds} Beds</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Bath className="w-3.5 h-3.5 text-zinc-400" />
-              <span>{property.baths} Baths</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <Bath className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
+              <span className="truncate">{property.baths} Baths</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Maximize2 className="w-3.5 h-3.5 text-zinc-400" />
-              <span>{property.area.toLocaleString()} sqft</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+              <Maximize2 className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
+              <span className="truncate">{property.area.toLocaleString()} sqft</span>
             </div>
           </div>
 

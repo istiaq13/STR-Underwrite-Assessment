@@ -37,55 +37,55 @@ export const RealtimeResultsPanel: React.FC<RealtimeResultsPanelProps> = ({ draf
       </div>
 
       {/* 1. Headline KPI Metrics Ribbon (2x2 Grid) */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
         {/* Total Out of Pocket */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-3.5 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block">
+        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Total Out of Pocket
           </span>
-          <div className="mt-1 text-lg sm:text-xl font-bold font-mono text-zinc-900">
+          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-zinc-900 truncate">
             {formatCurrency(calc?.total_oop)}
           </div>
-          <p className="mt-1 text-[10px] text-zinc-500">
+          <p className="mt-1 text-[10px] text-zinc-500 truncate">
             Down ({formatCurrency(calcPd?.down_payment_amount)}) + Closing + Setup
           </p>
         </div>
 
         {/* Expected Cash-on-Cash Return */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-3.5 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block">
+        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Expected Cash-on-Cash
           </span>
-          <div className="mt-1 text-lg sm:text-xl font-bold font-mono text-[#52A68B]">
+          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-[#52A68B] truncate">
             {formatPercent(scenarios?.mid.cash_on_cash_pct)}
           </div>
-          <p className="mt-1 text-[10px] text-zinc-500">
+          <p className="mt-1 text-[10px] text-zinc-500 truncate">
             Mid Free Cash Flow ÷ Total OOP
           </p>
         </div>
 
         {/* Net Operating Income */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-3.5 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block">
+        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Net Operating Income
           </span>
-          <div className="mt-1 text-lg sm:text-xl font-bold font-mono text-zinc-900">
+          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-zinc-900 truncate">
             {formatCurrency(scenarios?.mid.net_operating_income)}
           </div>
-          <p className="mt-1 text-[10px] text-zinc-500">
+          <p className="mt-1 text-[10px] text-zinc-500 truncate">
             Gross Rev − OPEX − Taxes
           </p>
         </div>
 
         {/* Free Cash Flow */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-3.5 shadow-xs">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block">
+        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Free Cash Flow (FCF)
           </span>
-          <div className="mt-1 text-lg sm:text-xl font-bold font-mono text-zinc-900">
+          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-zinc-900 truncate">
             {formatCurrency(scenarios?.mid.annual_free_cash_flow)}
           </div>
-          <p className="mt-1 text-[10px] text-zinc-500">
+          <p className="mt-1 text-[10px] text-zinc-500 truncate">
             Net cash flow after debt service
           </p>
         </div>

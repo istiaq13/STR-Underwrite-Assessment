@@ -106,7 +106,7 @@ export default function WorkspacePage() {
   ] as const;
 
   return (
-    <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 space-y-6">
+    <div className="max-w-[1600px] w-full mx-auto px-3 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6">
       <PropertyHeader
         property={property}
         market={market}
@@ -136,17 +136,17 @@ export default function WorkspacePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-zinc-200/90">
           
           {/* LEFT SECTION: Tabs Navigation & Calculation Input Part */}
-          <section className="lg:col-span-7 xl:col-span-7 p-5 sm:p-7 space-y-6">
+          <section className="lg:col-span-7 xl:col-span-7 p-3.5 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
             {/* Left Header: Underwriting Steps / Tabs */}
-            <div className="border-b border-zinc-200/90 pb-4">
-              <div className="flex items-center gap-2 mb-3.5">
+            <div className="border-b border-zinc-200/90 pb-3.5 sm:pb-4">
+              <div className="flex items-center gap-2 mb-3 sm:mb-3.5">
                 <span className="w-2 h-2 rounded-full bg-[#52A68B]" />
                 <span className="text-xs font-bold uppercase tracking-wider text-zinc-700">
                   Underwriting Workflow
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -155,20 +155,20 @@ export default function WorkspacePage() {
                       key={tab.id}
                       id={`tab-${tab.id}`}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`group py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all text-left relative cursor-pointer border ${
+                      className={`group py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 sm:gap-2 transition-all text-left relative cursor-pointer border ${
                         isActive
                           ? "bg-[#52A68B] text-white border-[#52A68B] shadow-sm shadow-[#52A68B]/30 ring-2 ring-[#52A68B]/25"
                           : "bg-white text-zinc-700 hover:text-[#2E6B57] hover:bg-[#EBF5F1]/50 border-zinc-200/90 hover:border-[#52A68B]/40 shadow-xs"
                       }`}
                     >
                       <div
-                        className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
                           isActive
                             ? "bg-white/20 text-white"
                             : "bg-zinc-100 text-zinc-500 group-hover:bg-[#EBF5F1] group-hover:text-[#52A68B]"
                         }`}
                       >
-                        <Icon className="w-3.5 h-3.5" />
+                        <Icon className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                       </div>
                       <span className={`truncate font-bold ${isActive ? "text-white" : "text-zinc-800 group-hover:text-zinc-900"}`}>
                         {tab.label}
@@ -202,7 +202,7 @@ export default function WorkspacePage() {
           </section>
 
           {/* RIGHT SECTION: Real-Time Calculated Results Panel */}
-          <section className="lg:col-span-5 xl:col-span-5 bg-zinc-50/40 p-5 sm:p-7 space-y-6">
+          <section className="lg:col-span-5 xl:col-span-5 bg-zinc-50/40 p-3.5 sm:p-6 lg:p-7 space-y-5 sm:space-y-6">
             <RealtimeResultsPanel draft={currentDraft} />
           </section>
         </div>

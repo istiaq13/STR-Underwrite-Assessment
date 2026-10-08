@@ -38,13 +38,14 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
   return (
     <div className="bg-white border border-zinc-200/90 rounded-2xl overflow-hidden shadow-card">
       {/* Top action row */}
-      <div className="px-4 sm:px-6 py-3 border-b border-zinc-100 flex flex-wrap items-center justify-between gap-3 bg-zinc-50/50">
+      <div className="px-3.5 sm:px-6 py-2.5 sm:py-3 border-b border-zinc-100 flex items-center justify-between gap-2 bg-zinc-50/50">
         <button
           onClick={onBack}
-          className="text-xs font-semibold text-zinc-600 hover:text-zinc-900 flex items-center gap-1.5 transition"
+          className="text-xs font-semibold text-zinc-600 hover:text-zinc-900 flex items-center gap-1.5 transition cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to Dashboard</span>
+          <span className="hidden xs:inline sm:inline">Back to Dashboard</span>
+          <span className="xs:hidden sm:hidden">Back</span>
         </button>
 
         <div className="flex items-center gap-1.5">
@@ -80,9 +81,9 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
       </div>
 
       {/* Main info row */}
-      <div className="p-4 sm:p-6 flex flex-col md:flex-row gap-5 items-start">
+      <div className="p-3.5 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-5 items-start">
         {/* Thumbnail */}
-        <div className="w-full md:w-44 h-32 rounded-xl bg-zinc-100 overflow-hidden flex-shrink-0 relative shadow-sm">
+        <div className="w-full sm:w-44 aspect-[16/10] sm:aspect-auto sm:h-32 rounded-xl bg-zinc-100 overflow-hidden flex-shrink-0 relative shadow-sm">
           {property.img_src ? (
             <img
               src={property.img_src}
@@ -97,8 +98,8 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
         </div>
 
         {/* Address and details */}
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5">
             <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-800 border border-zinc-200">
               <MapPin className="w-3 h-3 text-zinc-500" />
               {property.market_name}
@@ -109,15 +110,15 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
             )}
           </div>
 
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <h2 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight flex-1 min-w-0">
+          <div className="flex flex-wrap items-start justify-between gap-2.5 sm:gap-3">
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-zinc-900 tracking-tight flex-1 min-w-0">
               {property.address}
             </h2>
             <div className="text-right flex-shrink-0">
               <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400 block leading-tight">
                 List Price
               </span>
-              <span className="text-lg sm:text-xl font-bold text-[#52A68B] tracking-tight font-mono">
+              <span className="text-base sm:text-lg lg:text-xl font-bold text-[#52A68B] tracking-tight font-mono">
                 {property.price}
               </span>
             </div>
