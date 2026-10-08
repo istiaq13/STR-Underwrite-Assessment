@@ -131,16 +131,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Center / Left Content Container */}
-        <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10 my-auto py-8 sm:py-12">
-          <div className="max-w-xl lg:max-w-2xl xl:max-w-3xl space-y-6">
+        <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-8 lg:px-16 xl:px-20 relative z-10 my-auto py-8 sm:py-12">
+          <div className="max-w-xl lg:max-w-2xl xl:max-w-3xl space-y-5 sm:space-y-6">
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-[58px] xl:text-[64px] font-extrabold text-[#1E293B] leading-[1.12] tracking-tight">
-              Let&apos;s hunt for your <br />
+            <h1 className="text-3xl sm:text-5xl lg:text-[58px] xl:text-[64px] font-extrabold text-[#1E293B] leading-[1.15] sm:leading-[1.12] tracking-tight">
+              Let&apos;s hunt for your <br className="hidden sm:inline" />
               dream residence
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base text-neutral-500 max-w-lg leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-neutral-500 max-w-lg leading-relaxed">
               Explore our range of beautiful properties with the addition of separate accommodation suitable for you.
             </p>
 
@@ -148,16 +148,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="pt-2 relative z-20">
               {/* Buy Tab */}
               <div className="flex items-center">
-                <div className="px-7 py-2.5 rounded-t-xl text-sm font-semibold bg-white text-[#52A68B] shadow-[0_-4px_12px_rgba(0,0,0,0.03)] inline-block select-none">
+                <div className="px-5 sm:px-7 py-2 sm:py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold bg-white text-[#52A68B] shadow-[0_-4px_12px_rgba(0,0,0,0.03)] inline-block select-none">
                   Buy
                 </div>
               </div>
 
               {/* Card Container (Overlaps horizontally into the right half building) */}
-              <div className="bg-white rounded-b-2xl rounded-tr-2xl p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-neutral-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 max-w-2xl lg:max-w-2xl xl:max-w-3xl">
+              <div className="bg-white rounded-b-2xl rounded-tr-2xl p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-neutral-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 max-w-2xl lg:max-w-2xl xl:max-w-3xl">
                 {/* 1. Location */}
-                <div className="flex-1 px-3 py-1 border-b sm:border-b-0 sm:border-r border-neutral-100">
-                  <label className="block text-[11px] font-bold text-neutral-800 tracking-wide mb-0.5">
+                <div className="flex-1 px-2 sm:px-3 py-1 border-b sm:border-b-0 sm:border-r border-neutral-100 pb-2.5 sm:pb-1">
+                  <label className="block text-[10px] sm:text-[11px] font-bold text-neutral-800 tracking-wide mb-0.5">
                     Location
                   </label>
                   <div className="relative flex items-center justify-between">
@@ -178,8 +178,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 {/* 2. Type */}
-                <div className="flex-1 px-3 py-1 border-b sm:border-b-0 sm:border-r border-neutral-100">
-                  <label className="block text-[11px] font-bold text-neutral-800 tracking-wide mb-0.5">
+                <div className="flex-1 px-2 sm:px-3 py-1 border-b sm:border-b-0 sm:border-r border-neutral-100 pb-2.5 sm:pb-1">
+                  <label className="block text-[10px] sm:text-[11px] font-bold text-neutral-800 tracking-wide mb-0.5">
                     Type
                   </label>
                   <div className="relative flex items-center justify-between">
@@ -195,8 +195,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 {/* 3. Price Range */}
-                <div className="flex-1 px-3 py-1">
-                  <label className="block text-[11px] font-bold text-neutral-800 tracking-wide mb-0.5">
+                <div className="flex-1 px-2 sm:px-3 py-1 pb-1 sm:pb-1">
+                  <label className="block text-[10px] sm:text-[11px] font-bold text-neutral-800 tracking-wide mb-0.5">
                     Price Range
                   </label>
                   <div className="relative flex items-center justify-between">
@@ -215,7 +215,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <button
                   type="button"
                   onClick={handleHeroSearch}
-                  className="bg-[#52A68B] hover:bg-[#438a72] text-white px-8 py-3.5 rounded-xl text-sm font-semibold transition shadow-md shadow-[#52A68B]/25 flex-shrink-0 cursor-pointer text-center"
+                  className="w-full sm:w-auto bg-[#52A68B] hover:bg-[#438a72] text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-semibold transition shadow-md shadow-[#52A68B]/25 flex-shrink-0 cursor-pointer text-center"
                 >
                   Search
                 </button>
@@ -223,7 +223,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Mobile Image Fallback */}
-            <div className="lg:hidden mt-8 rounded-2xl overflow-hidden shadow-lg border border-neutral-100 aspect-[4/3]">
+            <div className="lg:hidden mt-6 sm:mt-8 rounded-2xl overflow-hidden shadow-lg border border-neutral-100 aspect-[16/10] sm:aspect-[16/9]">
               <img
                 src="/images/mulih-hero-building.jpg"
                 alt="Mulih Dream Residence"
@@ -237,13 +237,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* ── 2. BEST RECOMMENDATION SECTION (Below the fold, user scrolls to see this) ── */}
       <section
         id="recommendations"
-        className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 pt-16 sm:pt-24 pb-20 scroll-mt-20 border-t border-neutral-100"
+        className="max-w-[1440px] w-full mx-auto px-4 sm:px-8 lg:px-16 xl:px-20 pt-12 sm:pt-20 pb-16 sm:pb-20 scroll-mt-20 border-t border-neutral-100"
       >
         <div className="mb-6">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1E293B] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1E293B] tracking-tight">
             Best recomendation
           </h2>
-          <p className="text-sm text-neutral-400 max-w-lg mt-1 leading-relaxed">
+          <p className="text-xs sm:text-sm text-neutral-400 max-w-lg mt-1 leading-relaxed">
             Discover our exclusive selection of the finest one-of-a-kind luxury properties architectural masterpieces.
           </p>
         </div>
@@ -274,14 +274,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Modern Filter Toolbar & Reshaped Search Box */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 mb-6">
           {markets.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none flex-1 -mx-1 px-1 sm:mx-0 sm:px-0">
               <button
                 type="button"
                 id="market-filter-all"
                 onClick={() => setSelectedMarketId(null)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 flex items-center gap-2 border ${
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 flex items-center gap-1.5 sm:gap-2 border ${
                   selectedMarketId === null
                     ? "bg-[#52A68B] text-white border-[#52A68B] shadow-sm shadow-[#52A68B]/25"
                     : "bg-white text-neutral-600 border-neutral-200/90 hover:bg-[#EBF5F1]/70 hover:text-[#52A68B] hover:border-[#52A68B]/40"
@@ -304,7 +304,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   type="button"
                   id={`market-filter-${m.id}`}
                   onClick={() => setSelectedMarketId(m.id === selectedMarketId ? null : m.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 flex items-center gap-2 border ${
+                  className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer flex-shrink-0 flex items-center gap-1.5 sm:gap-2 border ${
                     selectedMarketId === m.id
                       ? "bg-[#52A68B] text-white border-[#52A68B] shadow-sm shadow-[#52A68B]/25"
                       : "bg-white text-neutral-600 border-neutral-200/90 hover:bg-[#EBF5F1]/70 hover:text-[#52A68B] hover:border-[#52A68B]/40"
@@ -326,7 +326,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           )}
 
           {/* Reshaped Modern Search Box */}
-          <div className="relative min-w-[260px] sm:min-w-[300px]">
+          <div className="relative w-full sm:w-auto min-w-0 sm:min-w-[260px] md:min-w-[280px] lg:min-w-[300px]">
             <div className="flex items-center h-10 px-3.5 bg-white border border-neutral-200/90 rounded-xl shadow-xs transition-all duration-200 focus-within:border-[#52A68B] focus-within:ring-2 focus-within:ring-[#52A68B]/15 focus-within:shadow-sm">
               <Search
                 className={`w-4 h-4 mr-2.5 flex-shrink-0 transition-colors ${
@@ -356,7 +356,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         {/* Properties Grid */}
         {isLoadingDashboard && properties.length === 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <PropertyCardSkeleton key={n} />
             ))}
@@ -377,7 +377,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
             {filteredProperties.map((property) => (
               <PropertyCard
                 key={property.zpid}

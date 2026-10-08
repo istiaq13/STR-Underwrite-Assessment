@@ -30,22 +30,22 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-neutral-100/80">
-      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24">
-        <div className="flex items-center justify-between h-20">
+      <div className="w-full px-4 sm:px-8 lg:px-16 xl:px-24">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Left Brand: Mint green circle emblem + STR Underwrite LabAnalyst */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-full bg-[#52A68B] text-white flex items-center justify-center font-bold text-base shadow-sm transition-transform group-hover:scale-105">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group min-w-0">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#52A68B] text-white flex items-center justify-center font-bold text-sm sm:text-base shadow-sm transition-transform group-hover:scale-105 flex-shrink-0">
                 S
               </div>
-              <span className="font-bold text-lg sm:text-xl tracking-tight text-[#1E293B] group-hover:text-[#52A68B] transition-colors whitespace-nowrap">
-                STR Underwrite LabAnalyst
+              <span className="font-bold text-base sm:text-lg lg:text-xl tracking-tight text-[#1E293B] group-hover:text-[#52A68B] transition-colors truncate">
+                STR Underwrite <span className="text-[#52A68B]">LabAnalyst</span>
               </span>
             </Link>
           </div>
 
           {/* Middle Navigation Links (Original options with links & logic) */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          <nav className="hidden md:flex items-center gap-5 lg:gap-8">
             {/* 1. Training Dashboard */}
             <Link
               id="nav-dashboard-tab"
@@ -174,7 +174,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Action: Auto-save status, Sign in, and Trainee Login */}
-          <div className="flex items-center gap-5 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-5 lg:gap-6 flex-shrink-0">
             {saveMessage && (
               <div className="hidden xl:flex items-center gap-1.5 text-xs text-emerald-700 font-medium px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 animate-fadeIn">
                 <CheckCircle2 className="w-3.5 h-3.5" />
@@ -185,7 +185,7 @@ export const Navbar: React.FC = () => {
             {/* Login text button */}
             <button
               type="button"
-              className="text-sm font-medium text-[#52A68B] hover:text-[#3f836d] transition cursor-pointer"
+              className="hidden sm:block text-sm font-medium text-[#52A68B] hover:text-[#3f836d] transition cursor-pointer"
             >
               Login
             </button>
@@ -193,7 +193,7 @@ export const Navbar: React.FC = () => {
             {/* Signup button */}
             <button
               type="button"
-              className="bg-[#52A68B] hover:bg-[#438a72] text-white px-6 sm:px-7 py-2.5 rounded-md text-sm font-medium transition shadow-sm hover:shadow cursor-pointer"
+              className="hidden sm:block bg-[#52A68B] hover:bg-[#438a72] text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded-md text-sm font-medium transition shadow-sm hover:shadow cursor-pointer"
             >
               Sign up
             </button>
@@ -202,7 +202,7 @@ export const Navbar: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-neutral-700 hover:text-neutral-900 rounded-lg hover:bg-neutral-100"
+              className="md:hidden p-2 text-neutral-700 hover:text-neutral-900 rounded-lg hover:bg-neutral-100 cursor-pointer"
               aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
