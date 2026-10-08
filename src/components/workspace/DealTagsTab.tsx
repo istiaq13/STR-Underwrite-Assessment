@@ -1,7 +1,7 @@
 import React from "react";
 import { UnderwritingData, DealTags } from "@/types";
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
-import { Tag, Sparkles, Sliders, FileText } from "lucide-react";
+import { Tag, Sparkles, Sliders, FileText, Check } from "lucide-react";
 
 interface DealTagsTabProps {
   draft: UnderwritingData;
@@ -26,6 +26,7 @@ const TAG_CONFIG: { key: keyof DealTags; label: string; desc: string }[] = [
 
 export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => {
   const tags = draft.tags;
+  const selectedTagsCount = TAG_CONFIG.filter(({ key }) => Boolean(tags[key])).length;
 
   const toggleTag = (key: keyof DealTags) => {
     onUpdate((prev) => ({
@@ -61,6 +62,12 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
         <CardHeader
           title="1. Deal Classification Tags"
           subtitle="Yes/no descriptors that categorize property characteristics at a glance. These describe the deal profile and don't directly affect the accuracy score."
+          action={
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
+              <Tag className="w-3.5 h-3.5" />
+              <span>{selectedTagsCount} of {TAG_CONFIG.length} Selected</span>
+            </span>
+          }
         />
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -72,36 +79,30 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
                   id={`tag-toggle-${key}`}
                   type="button"
                   onClick={() => toggleTag(key)}
-                  className={`p-3 rounded-xl border text-left transition flex items-start gap-3 ${
+                  className={`p-3 rounded-xl border text-left transition flex items-start gap-3 cursor-pointer ${
                     isActive
-                      ? "bg-slate-900 border-slate-900 text-white shadow-sm"
-                      : "bg-white border-slate-200 text-slate-700 hover:border-slate-300"
+                      ? "bg-[#52A68B]/10 border-[#52A68B] shadow-xs"
+                      : "bg-white border-zinc-200 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50/60"
                   }`}
                 >
                   <div
-                    className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center border transition ${
+                    className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center border transition flex-shrink-0 ${
                       isActive
-                        ? "bg-white border-white text-slate-900"
-                        : "border-slate-300 bg-white"
+                        ? "bg-[#52A68B] border-[#52A68B] text-white shadow-xs"
+                        : "border-zinc-300 bg-white"
                     }`}
                   >
                     {isActive && (
-                      <svg className="w-3 h-3" viewBox="0 0 14 14" fill="none">
-                        <path
-                          d="M3 7.5L5.5 10L11 4"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Check className="w-3 h-3 text-white stroke-[3]" />
                     )}
                   </div>
                   <div>
-                    <span className="text-xs font-semibold block">{label}</span>
+                    <span className={`text-xs block ${isActive ? "font-bold text-[#204e40]" : "font-semibold text-zinc-800"}`}>
+                      {label}
+                    </span>
                     <span
                       className={`text-[11px] leading-tight block mt-0.5 line-clamp-2 ${
-                        isActive ? "text-slate-300" : "text-slate-500"
+                        isActive ? "text-zinc-600" : "text-zinc-500"
                       }`}
                     >
                       {desc}
@@ -123,29 +124,35 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Renovation Level */}
-            <div>
+            <div className="p-4 rounded-xl border border-zinc-200 bg-zinc-50/40">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Renovation Level: Level {tags.renovation_level}
-                </label>
-                <span className="text-xs font-medium text-slate-500">
-                  {tags.renovation_level === 1 && "Turnkey / Cosmetic"}
-                  {tags.renovation_level === 2 && "Light Furnishing & Paint"}
-                  {tags.renovation_level === 3 && "Kitchen/Bath Refresh + Amenities"}
-                  {tags.renovation_level === 4 && "Substantial Remodel"}
-                  {tags.renovation_level === 5 && "Full Gut / Expansion"}
+                <div className="flex items-center gap-1.5">
+                  <Sliders className="w-3.5 h-3.5 text-[#52A68B]" />
+                  <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
+                    Renovation Level
+                  </label>
+                </div>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
+                  Level {tags.renovation_level}
                 </span>
               </div>
+              <p className="text-[11px] text-zinc-500 mb-3 min-h-[16px]">
+                {tags.renovation_level === 1 && "Turnkey / Cosmetic"}
+                {tags.renovation_level === 2 && "Light Furnishing & Paint"}
+                {tags.renovation_level === 3 && "Kitchen/Bath Refresh + Amenities"}
+                {tags.renovation_level === 4 && "Substantial Remodel"}
+                {tags.renovation_level === 5 && "Full Gut / Expansion"}
+              </p>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((lvl) => (
                   <button
                     key={lvl}
                     type="button"
                     onClick={() => setNumericTag("renovation_level", lvl)}
-                    className={`flex-1 py-2 rounded-lg text-xs font-bold border transition ${
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold border transition cursor-pointer ${
                       tags.renovation_level === lvl
-                        ? "bg-slate-900 border-slate-900 text-white"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-[#52A68B] border-[#52A68B] text-white shadow-sm shadow-[#52A68B]/25"
+                        : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50"
                     }`}
                   >
                     {lvl}
@@ -155,29 +162,35 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
             </div>
 
             {/* Deal Complexity */}
-            <div>
+            <div className="p-4 rounded-xl border border-zinc-200 bg-zinc-50/40">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                  Deal Complexity: Level {tags.deal_complexity}
-                </label>
-                <span className="text-xs font-medium text-slate-500">
-                  {tags.deal_complexity === 1 && "Straightforward Acquisition"}
-                  {tags.deal_complexity === 2 && "Standard Cabin / HOA"}
-                  {tags.deal_complexity === 3 && "Cohost Setup & Permitting"}
-                  {tags.deal_complexity === 4 && "Heavy Permitting / Pool Construction"}
-                  {tags.deal_complexity === 5 && "Complex Multi-Unit / Zoning"}
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#52A68B]" />
+                  <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
+                    Deal Complexity
+                  </label>
+                </div>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
+                  Level {tags.deal_complexity}
                 </span>
               </div>
+              <p className="text-[11px] text-zinc-500 mb-3 min-h-[16px]">
+                {tags.deal_complexity === 1 && "Straightforward Acquisition"}
+                {tags.deal_complexity === 2 && "Standard Cabin / HOA"}
+                {tags.deal_complexity === 3 && "Cohost Setup & Permitting"}
+                {tags.deal_complexity === 4 && "Heavy Permitting / Pool Construction"}
+                {tags.deal_complexity === 5 && "Complex Multi-Unit / Zoning"}
+              </p>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((lvl) => (
                   <button
                     key={lvl}
                     type="button"
                     onClick={() => setNumericTag("deal_complexity", lvl)}
-                    className={`flex-1 py-2 rounded-lg text-xs font-bold border transition ${
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold border transition cursor-pointer ${
                       tags.deal_complexity === lvl
-                        ? "bg-slate-900 border-slate-900 text-white"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-[#52A68B] border-[#52A68B] text-white shadow-sm shadow-[#52A68B]/25"
+                        : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50"
                     }`}
                   >
                     {lvl}
@@ -196,17 +209,25 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
           subtitle="Summarize why an investor should buy this property and the primary driver of outsized return."
         />
         <CardContent>
-          <textarea
-            id="textarea-deal-pitch"
-            rows={4}
-            value={draft.deal_pitch || ""}
-            onChange={(e) => updatePitch(e.target.value)}
-            placeholder="e.g. Scenic mountain views near Ober; hot tub and game room unlock top-tier weekend ADR with year-round demand..."
-            className="w-full p-3 text-xs sm:text-sm rounded-lg border border-slate-200 bg-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900"
-          />
-          <p className="mt-1.5 text-xs text-slate-500">
-            Recorded in your submission history for senior analyst review.
-          </p>
+          <div className="relative">
+            <textarea
+              id="textarea-deal-pitch"
+              rows={4}
+              value={draft.deal_pitch || ""}
+              onChange={(e) => updatePitch(e.target.value)}
+              placeholder="e.g. Scenic mountain views near Ober; hot tub and game room unlock top-tier weekend ADR with year-round demand..."
+              className="w-full p-3.5 text-xs sm:text-sm rounded-xl border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+            />
+          </div>
+          <div className="mt-2 flex items-center justify-between text-xs text-zinc-500">
+            <span className="flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-zinc-400" />
+              Recorded in submission history for senior analyst review.
+            </span>
+            <span className="font-mono text-[11px] text-zinc-400">
+              {(draft.deal_pitch || "").length} characters
+            </span>
+          </div>
         </CardContent>
       </Card>
     </div>
