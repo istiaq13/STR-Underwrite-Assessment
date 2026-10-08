@@ -118,11 +118,11 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
       {/* 2. Rating Levels */}
       <Card id="card-deal-complexity">
         <CardHeader
-          title="2. Renovation & Complexity Grading"
+          title="2. Renovation Level Grading"
           subtitle="Assess execution difficulty and capital overhaul requirements (1 = Minimal / Turnkey, 5 = Extensive / Heavy)."
         />
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="max-w-xl">
             {/* Renovation Level */}
             <div className="p-4 rounded-xl border border-zinc-200 bg-zinc-50/40">
               <div className="mb-2">
@@ -145,38 +145,6 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
                     onClick={() => setNumericTag("renovation_level", lvl)}
                     className={`flex-1 py-2 rounded-lg text-xs font-bold border transition cursor-pointer ${
                       tags.renovation_level === lvl
-                        ? "bg-[#52A68B] border-[#52A68B] text-white shadow-sm shadow-[#52A68B]/25"
-                        : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50"
-                    }`}
-                  >
-                    {lvl}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Deal Complexity */}
-            <div className="p-4 rounded-xl border border-zinc-200 bg-zinc-50/40">
-              <div className="mb-2">
-                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
-                  Deal Complexity
-                </label>
-              </div>
-              <p className="text-[11px] text-zinc-500 mb-3 min-h-[16px]">
-                {tags.deal_complexity === 1 && "Straightforward Acquisition"}
-                {tags.deal_complexity === 2 && "Standard Cabin / HOA"}
-                {tags.deal_complexity === 3 && "Cohost Setup & Permitting"}
-                {tags.deal_complexity === 4 && "Heavy Permitting / Pool Construction"}
-                {tags.deal_complexity === 5 && "Complex Multi-Unit / Zoning"}
-              </p>
-              <div className="flex items-center gap-2">
-                {[1, 2, 3, 4, 5].map((lvl) => (
-                  <button
-                    key={lvl}
-                    type="button"
-                    onClick={() => setNumericTag("deal_complexity", lvl)}
-                    className={`flex-1 py-2 rounded-lg text-xs font-bold border transition cursor-pointer ${
-                      tags.deal_complexity === lvl
                         ? "bg-[#52A68B] border-[#52A68B] text-white shadow-sm shadow-[#52A68B]/25"
                         : "bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50"
                     }`}
