@@ -6,9 +6,6 @@ import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import {
   CheckCircle2,
   AlertCircle,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
   Send,
   Building,
   DollarSign,
@@ -18,7 +15,7 @@ import {
 interface ReviewTabProps {
   draft: UnderwritingData;
   onSubmit: () => void;
-  onPrefillReference: () => void;
+  onPrefillReference?: () => void;
   isSubmitting?: boolean;
 }
 
@@ -106,45 +103,47 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
           action={
             <div className="flex items-center gap-1.5">
               {allValid ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#52A68B]" />
                   Ready to Submit
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {invalidCount} {invalidCount === 1 ? "Issue" : "Issues"} to Resolve
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/90 shadow-2xs">
+                  <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center font-mono">
+                    {invalidCount}
+                  </span>
+                  <span>{invalidCount === 1 ? "Issue" : "Issues"} to Resolve</span>
                 </span>
               )}
             </div>
           }
         />
         <CardContent>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-zinc-100">
             {validations.map((v, i) => (
               <div
                 key={i}
                 className={`py-3 flex items-start justify-between gap-3 ${
-                  !v.valid ? "bg-rose-50/40 px-3 rounded-lg my-1 border border-rose-100" : ""
+                  !v.valid ? "bg-rose-50/50 px-3.5 py-2.5 rounded-xl my-1 border border-rose-200/80" : ""
                 }`}
               >
                 <div className="flex items-start gap-2.5">
                   {v.valid ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#52A68B] mt-0.5 flex-shrink-0" />
                   ) : (
                     <AlertCircle className="w-4 h-4 text-rose-600 mt-0.5 flex-shrink-0" />
                   )}
                   <div>
                     <span
-                      className={`text-xs font-semibold ${
-                        v.valid ? "text-slate-800" : "text-rose-900 font-bold"
+                      className={`text-xs ${
+                        v.valid ? "font-semibold text-zinc-900" : "font-bold text-rose-900"
                       }`}
                     >
                       {v.label}
                     </span>
                     <p
                       className={`text-[11px] mt-0.5 ${
-                        v.valid ? "text-slate-500" : "text-rose-700"
+                        v.valid ? "text-zinc-500" : "text-rose-700"
                       }`}
                     >
                       {v.message}
@@ -153,10 +152,10 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                 </div>
                 <div>
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold ${
+                    className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold ${
                       v.valid
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                        : "bg-rose-100 text-rose-800 border border-rose-300"
+                        ? "bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]"
+                        : "bg-rose-100 text-rose-800 border border-rose-200"
                     }`}
                   >
                     {v.valid ? "PASS" : "REQUIRED"}
@@ -165,21 +164,6 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
               </div>
             ))}
           </div>
-
-          {!allValid && (
-            <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-center justify-between">
-              <span>
-                Want to quickly test with senior analyst benchmark data?
-              </span>
-              <button
-                onClick={onPrefillReference}
-                className="font-bold underline text-amber-900 hover:text-amber-950 flex items-center gap-1"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                Fill with Benchmark
-              </button>
-            </div>
-          )}
         </CardContent>
       </Card>
 
@@ -190,39 +174,39 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
           subtitle="Final review of your financial model prior to blind scoring against the senior analyst."
         />
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl bg-zinc-50/80 border border-zinc-200/90 mb-6 shadow-xs">
             <div>
-              <span className="text-[11px] uppercase tracking-wider text-slate-500 block">
+              <span className="text-[11px] uppercase tracking-wider text-zinc-500 font-semibold block mb-1">
                 Purchase Price
               </span>
-              <span className="text-base font-bold font-mono text-slate-900">
+              <span className="text-base sm:text-lg font-bold font-mono text-zinc-900">
                 {formatCurrency(pd.purchase_price)}
               </span>
             </div>
 
             <div>
-              <span className="text-[11px] uppercase tracking-wider text-slate-500 block">
+              <span className="text-[11px] uppercase tracking-wider text-zinc-500 font-semibold block mb-1">
                 Total Out of Pocket
               </span>
-              <span className="text-base font-bold font-mono text-slate-900">
+              <span className="text-base sm:text-lg font-bold font-mono text-zinc-900">
                 {formatCurrency(calc?.total_oop)}
               </span>
             </div>
 
             <div>
-              <span className="text-[11px] uppercase tracking-wider text-slate-500 block font-semibold text-slate-900">
+              <span className="text-[11px] uppercase tracking-wider text-[#52A68B] font-bold block mb-1">
                 Mid Revenue Forecast
               </span>
-              <span className="text-base font-bold font-mono text-slate-900">
+              <span className="text-base sm:text-lg font-bold font-mono text-[#52A68B]">
                 {formatCurrency(rev.mid_revenue)}
               </span>
             </div>
 
             <div>
-              <span className="text-[11px] uppercase tracking-wider text-slate-500 block">
+              <span className="text-[11px] uppercase tracking-wider text-zinc-500 font-semibold block mb-1">
                 Expected Cash-on-Cash
               </span>
-              <span className="text-base font-bold font-mono text-slate-900">
+              <span className="text-base sm:text-lg font-bold font-mono text-zinc-900">
                 {formatPercent(calc?.scenarios.mid.cash_on_cash_pct)}
               </span>
             </div>
@@ -230,27 +214,36 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
 
           {/* Quick stats checklist */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div className="p-3 rounded-lg border border-slate-200 bg-white">
-              <span className="font-semibold text-slate-800 block mb-1">Debt Structure</span>
-              <div className="space-y-1 text-slate-600 font-mono text-[11px]">
+            <div className="p-3.5 rounded-xl border border-zinc-200 bg-white shadow-xs">
+              <span className="font-semibold text-zinc-900 flex items-center gap-1.5 mb-2">
+                <Building className="w-3.5 h-3.5 text-[#52A68B]" />
+                Debt Structure
+              </span>
+              <div className="space-y-1.5 text-zinc-600 font-mono text-[11px]">
                 <div>Down: {formatCurrency(calc?.purchase_details.down_payment_amount)} ({(pd.down_payment_pct * 100).toFixed(0)}%)</div>
                 <div>Loan: {formatCurrency(calc?.purchase_details.loan_amount)}</div>
                 <div>Mortgage: {formatCurrency(calc?.purchase_details.monthly_mortgage)}/mo</div>
               </div>
             </div>
 
-            <div className="p-3 rounded-lg border border-slate-200 bg-white">
-              <span className="font-semibold text-slate-800 block mb-1">Upfront & OPEX</span>
-              <div className="space-y-1 text-slate-600 font-mono text-[11px]">
+            <div className="p-3.5 rounded-xl border border-zinc-200 bg-white shadow-xs">
+              <span className="font-semibold text-zinc-900 flex items-center gap-1.5 mb-2">
+                <DollarSign className="w-3.5 h-3.5 text-[#52A68B]" />
+                Upfront & OPEX
+              </span>
+              <div className="space-y-1.5 text-zinc-600 font-mono text-[11px]">
                 <div>Setup: {formatCurrency(calc?.optimization_total)}</div>
                 <div>Monthly OPEX: {formatCurrency(calc?.operating_expense_monthly_total)}/mo</div>
                 <div>Annual OPEX: {formatCurrency(calc?.operating_expense_annual_total)}/yr</div>
               </div>
             </div>
 
-            <div className="p-3 rounded-lg border border-slate-200 bg-white">
-              <span className="font-semibold text-slate-800 block mb-1">Tax Shield & Yield</span>
-              <div className="space-y-1 text-slate-600 font-mono text-[11px]">
+            <div className="p-3.5 rounded-xl border border-zinc-200 bg-white shadow-xs">
+              <span className="font-semibold text-zinc-900 flex items-center gap-1.5 mb-2">
+                <Percent className="w-3.5 h-3.5 text-[#52A68B]" />
+                Tax Shield & Yield
+              </span>
+              <div className="space-y-1.5 text-zinc-600 font-mono text-[11px]">
                 <div>Y1 Tax Savings: {formatCurrency(calc?.taxes.tax_savings)}</div>
                 <div>PRR: {formatPercent(calc?.prr)}</div>
                 <div>Y1 CoC w/ Tax: {formatPercent(calc?.scenarios.mid.y1_coc_incl_tax_savings_pct)}</div>
@@ -260,36 +253,26 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
         </CardContent>
       </Card>
 
-      {/* 3. Big Submission Action Box */}
-      <div className="bg-slate-900 text-white rounded-xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/10 text-slate-200 mb-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            Deterministic Grading System
-          </div>
-          <h3 className="text-lg sm:text-xl font-bold tracking-tight">
-            Ready to submit your completed underwriting?
-          </h3>
-          <p className="mt-1 text-xs sm:text-sm text-slate-300 max-w-xl">
-            Upon submitting, your Mid revenue forecast is graded against the senior analyst reference.
-            You will receive your score (100 / 70 / 40), target band breakdown, and updated leaderboard standing.
-          </p>
-        </div>
+      {/* 3. Submission Action Row */}
+      <div className="pt-6 border-t border-zinc-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h3 className="text-base sm:text-lg font-bold text-zinc-900 tracking-tight">
+          Ready to submit your completed underwriting?
+        </h3>
 
-        <div className="w-full md:w-auto flex-shrink-0">
+        <div className="flex flex-col items-stretch sm:items-end flex-shrink-0">
           <button
             id="btn-submit-underwriting"
             onClick={onSubmit}
             disabled={!allValid || isSubmitting}
-            className={`w-full md:w-auto px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-lg transition ${
+            className={`w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 transition-all ${
               allValid && !isSubmitting
-                ? "bg-white text-slate-900 hover:bg-slate-100 hover:scale-[1.02] cursor-pointer"
-                : "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700"
+                ? "bg-[#52A68B] hover:bg-[#438a73] text-white shadow-sm shadow-[#52A68B]/30 hover:scale-[1.01] cursor-pointer"
+                : "bg-zinc-100 text-zinc-400 border border-zinc-200 cursor-not-allowed"
             }`}
           >
             {isSubmitting ? (
               <>
-                <span className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-[#52A68B] border-t-transparent rounded-full animate-spin" />
                 <span>Submitting & Grading...</span>
               </>
             ) : (
@@ -300,7 +283,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
             )}
           </button>
           {!allValid && (
-            <p className="text-[11px] text-rose-400 mt-2 text-center md:text-right">
+            <p className="text-xs text-rose-600 mt-1.5 text-center sm:text-right font-medium">
               Fix {invalidCount} required items above to submit
             </p>
           )}
