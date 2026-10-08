@@ -22,22 +22,26 @@ function EvaluationContent() {
   } = useUnderwriting();
 
   const [isLoading, setIsLoading] = useState(false);
+  const loadedIdRef = React.useRef<string | null>(null);
 
   useEffect(() => {
     if (submissionId) {
-      setIsLoading(true);
-      loadSubmission(submissionId)
-        .finally(() => {
-          setIsLoading(false);
-          finishOpeningProperty();
-        });
+      if (loadedIdRef.current !== submissionId) {
+        loadedIdRef.current = submissionId;
+        setIsLoading(true);
+        loadSubmission(submissionId)
+          .finally(() => {
+            setIsLoading(false);
+            finishOpeningProperty();
+          });
+      }
     } else {
       if (!latestSubmission && submissions.length > 0) {
         setLatestSubmission(submissions[0]);
       }
       finishOpeningProperty();
     }
-  }, [submissionId, latestSubmission, submissions, loadSubmission, setLatestSubmission, finishOpeningProperty]);
+  }, [submissionId, submissions, loadSubmission, setLatestSubmission, finishOpeningProperty]);
 
   const handleBackToDashboard = () => {
     router.push("/");
@@ -78,7 +82,7 @@ function EvaluationContent() {
 
 export default function EvaluationPage() {
   return (
-    <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 py-6 sm:py-8">
+    <div className="max-w-[1440px] w-full mx-auto px-3.5 sm:px-6 md:px-10 lg:px-14 xl:px-20 py-4 sm:py-6 lg:py-8">
       <Suspense fallback={<div className="h-64 rounded-2xl skeleton-wave" />}>
         <EvaluationContent />
       </Suspense>
