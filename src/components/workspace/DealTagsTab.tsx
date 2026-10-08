@@ -1,7 +1,7 @@
 import React from "react";
 import { UnderwritingData, DealTags } from "@/types";
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
-import { Tag, Sparkles, Sliders, FileText, Check } from "lucide-react";
+import { Tag, FileText, Check } from "lucide-react";
 
 interface DealTagsTabProps {
   draft: UnderwritingData;
@@ -125,16 +125,10 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Renovation Level */}
             <div className="p-4 rounded-xl border border-zinc-200 bg-zinc-50/40">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                  <Sliders className="w-3.5 h-3.5 text-[#52A68B]" />
-                  <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
-                    Renovation Level
-                  </label>
-                </div>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
-                  Level {tags.renovation_level}
-                </span>
+              <div className="mb-2">
+                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
+                  Renovation Level
+                </label>
               </div>
               <p className="text-[11px] text-zinc-500 mb-3 min-h-[16px]">
                 {tags.renovation_level === 1 && "Turnkey / Cosmetic"}
@@ -163,16 +157,10 @@ export const DealTagsTab: React.FC<DealTagsTabProps> = ({ draft, onUpdate }) => 
 
             {/* Deal Complexity */}
             <div className="p-4 rounded-xl border border-zinc-200 bg-zinc-50/40">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#52A68B]" />
-                  <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
-                    Deal Complexity
-                  </label>
-                </div>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
-                  Level {tags.deal_complexity}
-                </span>
+              <div className="mb-2">
+                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
+                  Deal Complexity
+                </label>
               </div>
               <p className="text-[11px] text-zinc-500 mb-3 min-h-[16px]">
                 {tags.deal_complexity === 1 && "Straightforward Acquisition"}

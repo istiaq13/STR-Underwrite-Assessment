@@ -42,10 +42,10 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
   const addCompItem = () => {
     const newComp: CompItem = {
       id: `comp-${Date.now()}`,
-      listing_url: "https://www.airbnb.com",
-      revenue: 125000,
-      bedrooms: draft.bedrooms || 3,
-      sleeps: draft.sleep_count_low || 6,
+      listing_url: "",
+      revenue: 0,
+      bedrooms: 0,
+      sleeps: 0,
     };
 
     onUpdate((prev) => ({
@@ -101,8 +101,8 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                   type="number"
                   value={rev.low_revenue || ""}
                   onChange={(e) => updateRevenue("low_revenue", Number(e.target.value))}
-                  placeholder="105,000"
-                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-medium rounded-lg border border-zinc-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                  placeholder="Enter low revenue"
+                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-medium rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
                 />
               </div>
             </div>
@@ -128,8 +128,8 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                   type="number"
                   value={rev.mid_revenue || ""}
                   onChange={(e) => updateRevenue("mid_revenue", Number(e.target.value))}
-                  placeholder="125,000"
-                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-bold text-zinc-900 rounded-lg border-2 border-[#52A68B] bg-white focus:outline-none focus:ring-2 focus:ring-[#52A68B]/40 focus:border-[#52A68B] transition-colors"
+                  placeholder="Enter mid revenue"
+                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-bold text-zinc-900 rounded-lg border-2 border-[#52A68B] bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/40 focus:border-[#52A68B] transition-colors"
                 />
               </div>
             </div>
@@ -154,8 +154,8 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                   type="number"
                   value={rev.high_revenue || ""}
                   onChange={(e) => updateRevenue("high_revenue", Number(e.target.value))}
-                  placeholder="142,000"
-                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-medium rounded-lg border border-zinc-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                  placeholder="Enter high revenue"
+                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-medium rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
                 />
               </div>
             </div>
@@ -227,7 +227,7 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                             value={comp.listing_url}
                             onChange={(e) => updateCompItem(comp.id, "listing_url", e.target.value)}
                             className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
-                            placeholder="https://airbnb.com/rooms/..."
+                            placeholder="Enter listing URL (e.g. airbnb.com/...)"
                           />
                           {comp.listing_url && (
                             <a
@@ -248,7 +248,8 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                           min={0}
                           value={comp.bedrooms || ""}
                           onChange={(e) => updateCompItem(comp.id, "bedrooms", Number(e.target.value))}
-                          className="w-16 px-2 py-1.5 text-xs font-mono text-right rounded-lg border border-zinc-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                          placeholder="Beds"
+                          className="w-16 px-2 py-1.5 text-xs font-mono text-right rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
                         />
                       </td>
                       <td className="py-2.5 px-2 text-right font-mono">
@@ -257,7 +258,8 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                           min={0}
                           value={comp.sleeps || ""}
                           onChange={(e) => updateCompItem(comp.id, "sleeps", Number(e.target.value))}
-                          className="w-16 px-2 py-1.5 text-xs font-mono text-right rounded-lg border border-zinc-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                          placeholder="Sleeps"
+                          className="w-16 px-2 py-1.5 text-xs font-mono text-right rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
                         />
                       </td>
                       <td className="py-2.5 px-2 text-right">
@@ -267,7 +269,8 @@ export const AnalysisTab: React.FC<AnalysisTabProps> = ({ draft, onUpdate }) => 
                             type="number"
                             value={comp.revenue || ""}
                             onChange={(e) => updateCompItem(comp.id, "revenue", Number(e.target.value))}
-                            className="w-full pl-6 pr-2.5 py-1.5 text-xs font-mono text-right font-bold text-zinc-900 rounded-lg border border-zinc-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                            placeholder="Enter revenue"
+                            className="w-full pl-6 pr-2.5 py-1.5 text-xs font-mono text-right font-bold text-zinc-900 rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
                           />
                         </div>
                       </td>

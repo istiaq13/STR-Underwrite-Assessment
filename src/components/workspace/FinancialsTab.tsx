@@ -73,8 +73,8 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
         ...prev.optimization_items,
         {
           id: `opt-${Date.now()}`,
-          category: COMMON_OPT_CATEGORIES[0],
-          total_price: 5000,
+          category: "",
+          total_price: 0,
         },
       ],
     }));
@@ -108,8 +108,8 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
         ...prev.operating_expenses,
         {
           id: `opex-${Date.now()}`,
-          expense_name: "Other Expense",
-          monthly_amount: 100,
+          expense_name: "",
+          monthly_amount: 0,
         },
       ],
     }));
@@ -156,8 +156,8 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                   type="number"
                   value={pd.purchase_price || ""}
                   onChange={(e) => updatePurchase("purchase_price", Number(e.target.value))}
-                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-medium rounded-lg border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900"
-                  placeholder="650,000"
+                  className="w-full pl-7 pr-3 py-2 text-sm font-mono font-medium rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                  placeholder="Enter purchase price"
                 />
               </div>
               <p className="mt-1 text-[11px] text-zinc-500">Prefilled from listing; adjust for offer price.</p>
@@ -184,7 +184,8 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                   step="0.01"
                   value={Number((pd.interest_rate * 100).toFixed(2)) || ""}
                   onChange={(e) => updatePurchase("interest_rate", Number(e.target.value) / 100)}
-                  className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                  className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                  placeholder="Enter interest rate"
                 />
                 <span className="absolute right-3 top-2.5 text-zinc-400 text-xs">%</span>
               </div>
@@ -200,7 +201,8 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                 type="number"
                 value={pd.mortgage_years || 30}
                 onChange={(e) => updatePurchase("mortgage_years", Number(e.target.value))}
-                className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                placeholder="Enter loan term"
               />
               <p className="mt-1 text-[11px] text-zinc-500">Standard 30-yr fixed</p>
             </div>
@@ -247,60 +249,69 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {draft.optimization_items.map((item, idx) => (
-                  <tr key={item.id} className="hover:bg-slate-50/50">
-                    <td className="py-2.5 pr-3">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          list={`opt-categories-${idx}`}
-                          value={item.category}
-                          onChange={(e) => updateOptimizationItem(item.id, "category", e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-xs rounded border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
-                          placeholder="Category or feature name"
-                        />
-                        <datalist id={`opt-categories-${idx}`}>
-                          {COMMON_OPT_CATEGORIES.map((c) => (
-                            <option key={c} value={c} />
-                          ))}
-                        </datalist>
-                      </div>
-                    </td>
-                    <td className="py-2.5 pl-3 text-right">
-                      <div className="relative inline-block w-40">
-                        <span className="absolute left-2.5 top-1.5 text-slate-400 font-mono">$</span>
-                        <input
-                          type="number"
-                          value={item.total_price || ""}
-                          onChange={(e) =>
-                            updateOptimizationItem(item.id, "total_price", Number(e.target.value))
-                          }
-                          className="w-full pl-6 pr-2.5 py-1.5 text-xs font-mono text-right rounded border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
-                        />
-                      </div>
-                    </td>
-                    <td className="py-2.5 text-center">
-                      <button
-                        onClick={() => removeOptimizationItem(item.id)}
-                        className="p-1 rounded text-slate-400 hover:text-rose-600 transition"
-                        title="Remove item"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                {draft.optimization_items && draft.optimization_items.length > 0 ? (
+                  draft.optimization_items.map((item, idx) => (
+                    <tr key={item.id} className="hover:bg-slate-50/50">
+                      <td className="py-2.5 pr-3">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            list={`opt-categories-${idx}`}
+                            value={item.category}
+                            onChange={(e) => updateOptimizationItem(item.id, "category", e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                            placeholder="Enter category or item"
+                          />
+                          <datalist id={`opt-categories-${idx}`}>
+                            {COMMON_OPT_CATEGORIES.map((c) => (
+                              <option key={c} value={c} />
+                            ))}
+                          </datalist>
+                        </div>
+                      </td>
+                      <td className="py-2.5 pl-3 text-right">
+                        <div className="relative inline-block w-40">
+                          <span className="absolute left-2.5 top-1.5 text-zinc-400 font-mono text-xs">$</span>
+                          <input
+                            type="number"
+                            value={item.total_price || ""}
+                            onChange={(e) =>
+                              updateOptimizationItem(item.id, "total_price", Number(e.target.value))
+                            }
+                            className="w-full pl-6 pr-2.5 py-1.5 text-xs font-mono text-right rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </td>
+                      <td className="py-2.5 text-center">
+                        <button
+                          onClick={() => removeOptimizationItem(item.id)}
+                          className="p-1 rounded text-zinc-400 hover:text-rose-600 transition"
+                          title="Remove item"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} className="py-6 text-center text-zinc-400 italic">
+                      No setup budget items attached. Click &quot;Add Item&quot; to calibrate setup assumptions.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs text-slate-500">
+          <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+            <span className="text-xs text-zinc-500">
               Total items: {draft.optimization_items.length}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-700">Total Setup Budget:</span>
-              <span className="text-sm font-bold font-mono text-slate-900">
+              <span className="text-xs font-semibold text-zinc-700">Total Setup Budget:</span>
+              <span className="text-sm font-bold font-mono text-zinc-900">
                 {formatCurrency(draft.calculations?.optimization_total)}
               </span>
             </div>
@@ -328,58 +339,67 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
+                <tr className="border-b border-zinc-200 text-zinc-500 uppercase tracking-wider font-semibold">
                   <th className="pb-2">Expense Name</th>
                   <th className="pb-2 w-48 text-right">Monthly Amount ($)</th>
                   <th className="pb-2 w-40 text-right">Annualized ($)</th>
                   <th className="pb-2 w-16 text-center">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {draft.operating_expenses.map((item, idx) => (
-                  <tr key={item.id} className="hover:bg-slate-50/50">
-                    <td className="py-2.5 pr-3">
-                      <input
-                        type="text"
-                        list={`opex-names-${idx}`}
-                        value={item.expense_name}
-                        onChange={(e) => updateOperatingExpense(item.id, "expense_name", e.target.value)}
-                        className="w-full px-2.5 py-1.5 text-xs rounded border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
-                        placeholder="Expense name"
-                      />
-                      <datalist id={`opex-names-${idx}`}>
-                        {COMMON_OPEX_NAMES.map((name) => (
-                          <option key={name} value={name} />
-                        ))}
-                      </datalist>
-                    </td>
-                    <td className="py-2.5 pl-3 text-right">
-                      <div className="relative inline-block w-36">
-                        <span className="absolute left-2.5 top-1.5 text-slate-400 font-mono">$</span>
+              <tbody className="divide-y divide-zinc-100">
+                {draft.operating_expenses && draft.operating_expenses.length > 0 ? (
+                  draft.operating_expenses.map((item, idx) => (
+                    <tr key={item.id} className="hover:bg-zinc-50/50">
+                      <td className="py-2.5 pr-3">
                         <input
-                          type="number"
-                          value={item.monthly_amount || ""}
-                          onChange={(e) =>
-                            updateOperatingExpense(item.id, "monthly_amount", Number(e.target.value))
-                          }
-                          className="w-full pl-6 pr-2.5 py-1.5 text-xs font-mono text-right rounded border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+                          type="text"
+                          list={`opex-names-${idx}`}
+                          value={item.expense_name}
+                          onChange={(e) => updateOperatingExpense(item.id, "expense_name", e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                          placeholder="Enter expense name"
                         />
-                      </div>
-                    </td>
-                    <td className="py-2.5 text-right font-mono text-slate-600">
-                      {formatCurrency((item.monthly_amount || 0) * 12)}
-                    </td>
-                    <td className="py-2.5 text-center">
-                      <button
-                        onClick={() => removeOperatingExpense(item.id)}
-                        className="p-1 rounded text-slate-400 hover:text-rose-600 transition"
-                        title="Remove expense"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                        <datalist id={`opex-names-${idx}`}>
+                          {COMMON_OPEX_NAMES.map((name) => (
+                            <option key={name} value={name} />
+                          ))}
+                        </datalist>
+                      </td>
+                      <td className="py-2.5 pl-3 text-right">
+                        <div className="relative inline-block w-36">
+                          <span className="absolute left-2.5 top-1.5 text-zinc-400 font-mono text-xs">$</span>
+                          <input
+                            type="number"
+                            value={item.monthly_amount || ""}
+                            onChange={(e) =>
+                              updateOperatingExpense(item.id, "monthly_amount", Number(e.target.value))
+                            }
+                            className="w-full pl-6 pr-2.5 py-1.5 text-xs font-mono text-right rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] transition-colors"
+                            placeholder="Enter amount"
+                          />
+                        </div>
+                      </td>
+                      <td className="py-2.5 text-right font-mono text-slate-600">
+                        {formatCurrency((item.monthly_amount || 0) * 12)}
+                      </td>
+                      <td className="py-2.5 text-center">
+                        <button
+                          onClick={() => removeOperatingExpense(item.id)}
+                          className="p-1 rounded text-slate-400 hover:text-rose-600 transition"
+                          title="Remove expense"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="py-6 text-center text-zinc-400 italic">
+                      No operating expenses attached. Click &quot;Add Expense&quot; to calibrate operational cost assumptions.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -438,10 +458,9 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                 step={1}
                 helperText="Portion of building basis qualifying for 5/15-yr depreciation (standard 25%)."
               />
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
                     Bonus Depreciation %
                   </label>
                   <div className="relative">
@@ -451,15 +470,16 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                       step="1"
                       value={Number((draft.taxes.bonus_amount_pct * 100).toFixed(0)) || ""}
                       onChange={(e) => updateTaxes("bonus_amount_pct", Number(e.target.value) / 100)}
-                      className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                      className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                      placeholder="Enter bonus %"
                     />
-                    <span className="absolute right-3 top-2.5 text-slate-400 text-xs">%</span>
+                    <span className="absolute right-3 top-2.5 text-zinc-400 text-xs">%</span>
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">Standard 60%</p>
+                  <p className="mt-1 text-[11px] text-zinc-500">Standard 60%</p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
                     Investor Tax Rate %
                   </label>
                   <div className="relative">
@@ -469,11 +489,12 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
                       step="1"
                       value={Number((draft.taxes.tax_rate_pct * 100).toFixed(0)) || ""}
                       onChange={(e) => updateTaxes("tax_rate_pct", Number(e.target.value) / 100)}
-                      className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900"
+                      className="w-full px-3 py-2 text-sm font-mono rounded-lg border border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#52A68B]/30 focus:border-[#52A68B] transition-colors"
+                      placeholder="Enter tax rate"
                     />
-                    <span className="absolute right-3 top-2.5 text-slate-400 text-xs">%</span>
+                    <span className="absolute right-3 top-2.5 text-zinc-400 text-xs">%</span>
                   </div>
-                  <p className="mt-1 text-[11px] text-slate-500">Standard 37% top bracket</p>
+                  <p className="mt-1 text-[11px] text-zinc-500">Standard 37% top bracket</p>
                 </div>
               </div>
             </div>
