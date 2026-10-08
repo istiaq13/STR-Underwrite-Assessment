@@ -36,7 +36,7 @@ export const Input: React.FC<InputProps> = ({
         )}
         <input
           id={id}
-          className={`block w-full rounded-xl border bg-white px-3 py-2 text-xs sm:text-sm text-zinc-900 transition-all placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-900 focus:border-zinc-900 ${
+          className={`block w-full rounded-xl border bg-white px-3 py-2 text-xs sm:text-sm text-zinc-900 transition-all placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#52A68B] focus:border-[#52A68B] ${
             prefix ? "pl-7" : ""
           } ${suffix ? "pr-8" : ""} ${
             error
@@ -94,7 +94,7 @@ export const PercentageSliderInput: React.FC<PercentageSliderInputProps> = ({
           {label}
         </label>
         {showBadge && (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-semibold bg-zinc-100 text-zinc-800 border border-zinc-200">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-semibold bg-[#EBF5F1] text-[#3d7d69] border border-[#c2e4d8]">
             {pctValue}%
           </span>
         )}
@@ -108,7 +108,7 @@ export const PercentageSliderInput: React.FC<PercentageSliderInputProps> = ({
           step={step}
           value={pctValue}
           onChange={(e) => onChange(Number(e.target.value) / 100)}
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer accent-[#52A68B]"
         />
         <div className="w-20 flex-shrink-0">
           <Input
