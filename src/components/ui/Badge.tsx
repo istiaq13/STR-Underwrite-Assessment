@@ -41,8 +41,8 @@ export const StatusBadge: React.FC<{ status: UnderwritingStatus }> = ({ status }
       );
     case "in_progress":
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200 shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/90 shadow-2xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
           In Progress
         </span>
       );

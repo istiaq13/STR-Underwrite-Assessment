@@ -312,7 +312,7 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({ draft, onUpdate })
       <Card id="card-operating-expenses">
         <CardHeader
           title="3. Operating Expenses (OPEX)"
-          subtitle="Recurring monthly costs subtracted from revenue. The Low and High scenarios nudge this slightly (×0.96 and ×1.04)."
+          subtitle="Recurring monthly costs subtracted from revenue. The Low and High scenarios nudge this slightly."
           action={
             <button
               id="btn-add-opex-item"

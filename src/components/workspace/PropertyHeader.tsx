@@ -94,9 +94,6 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
               <Building2 className="w-8 h-8 opacity-40" />
             </div>
           )}
-          <div className="absolute bottom-2 left-2 bg-zinc-900/90 text-white px-2 py-0.5 rounded-md text-xs font-mono font-bold backdrop-blur-md">
-            {property.price}
-          </div>
         </div>
 
         {/* Address and details */}
@@ -112,9 +109,19 @@ export const PropertyHeader: React.FC<PropertyHeaderProps> = ({
             )}
           </div>
 
-          <h2 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">
-            {property.address}
-          </h2>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <h2 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight flex-1 min-w-0">
+              {property.address}
+            </h2>
+            <div className="text-right flex-shrink-0">
+              <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400 block leading-tight">
+                List Price
+              </span>
+              <span className="text-lg sm:text-xl font-bold text-[#52A68B] tracking-tight font-mono">
+                {property.price}
+              </span>
+            </div>
+          </div>
 
           <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-zinc-600">
             <div className="flex items-center gap-1.5">

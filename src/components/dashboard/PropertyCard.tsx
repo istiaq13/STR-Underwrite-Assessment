@@ -44,17 +44,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
     return "Ungraded";
   };
 
-  const getStatusText = () => {
-    if (isSubmitted) return "Submitted";
-    if (property.status === "in_progress") return "In Progress";
-    return "Not Started";
-  };
-
-  const getStatusStyle = () => {
-    if (isSubmitted) return "text-emerald-600 font-bold";
-    if (property.status === "in_progress") return "text-amber-500 font-bold";
-    return "text-neutral-400 font-medium";
-  };
 
   return (
     <div
@@ -87,12 +76,33 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               <Building2 className="w-8 h-8 opacity-40" />
             </div>
           )}
+
+          {/* Top Left: Market Location */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 pointer-events-none">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/95 text-zinc-800 shadow-sm backdrop-blur-md border border-zinc-200/60 flex items-center gap-1">
+            <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/95 text-zinc-800 shadow-sm backdrop-blur-md border border-zinc-200/60 flex items-center gap-1">
               <MapPin className="w-3 h-3 text-[#52A68B]" />
               <span>{property.market_name}</span>
             </span>
           </div>
+
+          {/* Top Right: Status Tag Overlay */}
+          {property.status === "in_progress" && (
+            <div className="absolute top-3 right-3 pointer-events-none">
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-md backdrop-blur-md flex items-center gap-1.5 border border-amber-400/80">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                In Progress
+              </span>
+            </div>
+          )}
+          {isSubmitted && (
+            <div className="absolute top-3 right-3 pointer-events-none">
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#52A68B] text-white shadow-md backdrop-blur-md flex items-center gap-1.5 border border-[#52A68B]/80">
+                <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                Submitted
+              </span>
+            </div>
+          )}
+
         </div>
 
         {/* Content */}
@@ -110,7 +120,10 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               </p>
             </div>
             <div className="text-right flex-shrink-0 pt-0.5">
-              <span className="text-base sm:text-lg font-bold text-[#52A68B] tracking-tight">
+              <span className="text-[10px] uppercase font-semibold tracking-wider text-zinc-400 block leading-tight">
+                List Price
+              </span>
+              <span className="text-base sm:text-lg font-bold text-[#52A68B] tracking-tight font-mono">
                 {property.price}
               </span>
             </div>
@@ -160,10 +173,22 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
 
             <div className="flex flex-col items-end">
-              <span className={`text-[10px] uppercase tracking-wider leading-tight ${getStatusStyle()}`}>
-                {getStatusText()}
-              </span>
-              <div className="mt-0.5">
+              {property.status === "in_progress" ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200/90 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  In Progress
+                </span>
+              ) : isSubmitted ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/90 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Submitted
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 text-neutral-500 border border-neutral-200">
+                  Not Started
+                </span>
+              )}
+              <div className="mt-1">
                 <span
                   className={`text-[11px] leading-tight ${
                     property.attempts === 0
