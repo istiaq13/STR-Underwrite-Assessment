@@ -413,7 +413,7 @@ Running 7 tests using 1 worker
 7 passed (16.0s)
 ```
 
-### Test Scenario Coverage
+### 8.1 Test Scenario Coverage
 1. **Test 1 — Dashboard & Metrics**: Verifies property card rendering, market filtering, and aggregate metrics.
 2. **Test 2 — Primary Path (100 Best Score)**: Underwrites Gatlinburg cabin (`zpid: 41234567`), sets Mid forecast to $125,000, submits for grading, verifies `100` Best score, inspects comparison table, and verifies status updates to `Submitted` on dashboard.
 3. **Test 3 — Alternate Path (70 Medium Score)**: Underwrites Broken Bow property (`zpid: 52345678`), inputs Mid forecast of $115,000 ($+19.8\%$ deviation), and verifies `70` Medium score.
@@ -422,10 +422,56 @@ Running 7 tests using 1 worker
 6. **Test 6 — Draft Persistence & Resumption**: Edits purchase price on Kissimmee property (`zpid: 74567890`), saves draft, returns to dashboard, verifies `In Progress` status, and resumes underwriting with inputs intact.
 7. **Test 7 — Trainee Cohort Leaderboard**: Verifies leaderboard table rendering, rankings, streaks, and peer benchmarks.
 
-### How to Run Tests
+### 8.2 Fixture & Case-Generation Strategy
+
+The test suite is built on **deterministic, zero-flake test data fixtures** derived directly from the backend seed database:
+
+1. **State Isolation**: Every test begins with an `addInitScript` hook executing `window.localStorage.clear()`. This guarantees that tests run in an isolated sandbox independent of test execution order.
+2. **Benchmark-Derived Target Bands**:
+   - **Gatlinburg Cabin (`zpid: 41234567`)**: Reference Mid = `$125,000`. Test 2 injects an exact `$125,000` forecast to deterministically validate the **Best Band (100 pts, $\le 10\%$)** path.
+   - **Broken Bow Cabin (`zpid: 52345678`)**: Reference Mid = `$96,000`.
+     - Test 3 injects `$115,000` ($+19.8\%$ deviation), which falls within the Medium band ($10\% - 25\%$) to validate the **Medium Band (70 pts)** path.
+     - Test 4 injects `$180,000` ($+87.5\%$ deviation), which exceeds $25\%$ to validate the **Low Band (40 pts)** path.
+3. **Validation & State Transition Fixtures**:
+   - Test 5 leverages **Kissimmee Villa (`zpid: 63456789`)** to test uninitialized state, ensuring that omitting the Mid forecast trips pre-flight validation and disables submission.
+   - Test 6 mutates purchase details on **Kissimmee Villa (`zpid: 74567890`)**, verifying local and remote draft persistence and subsequent resumption.
+
+### 8.3 Test Failure Artifacts & Debugging Guide
+
+The test runner is configured to automatically capture comprehensive forensics whenever a test fails (`playwright.config.ts`):
+
+- **Trace Recording (`trace: 'retain-on-failure'`)**: Full execution trace containing DOM snapshots before/after each step, console logs, network payloads, and source code mapping.
+- **Visual Screenshots (`screenshot: 'only-on-failure'`)**: Viewport screenshot saved to `test-results/` at the exact millisecond of failure.
+- **Execution Video (`video: 'retain-on-failure'`)**: WebM video recording of the entire test lifecycle.
+
+#### How to Debug a Failed Test:
+
+1. **Interactive HTML Test Report**:
+   ```bash
+   npx playwright show-report
+   ```
+   Renders the complete visual report in your browser with collapsed stacks, failed locator highlights, and attached error snapshots.
+
+2. **Playwright Trace Viewer**:
+   ```bash
+   # Inspect trace for a specific failed test run:
+   npx playwright show-trace test-results/<test-folder-name>/trace.zip
+   ```
+   The Trace Viewer provides a time-travel debugger with:
+   - Interactive DOM inspection at every action.
+   - Network tab showing outgoing `/api/underwritings` requests and JSON responses.
+   - Console logs and uncaught runtime errors.
+
+3. **Step-by-Step Headed Execution**:
+   ```bash
+   npx playwright test --debug
+   ```
+   Opens Playwright Inspector, allowing you to pause, step through assertions one by one, and inspect elements live.
+
+### 8.4 How to Run Tests
 
 ```bash
-# Run tests headless:
+# Run tests headless (unattended):
 npx playwright test
 
 # Run tests with interactive Playwright UI:
@@ -437,12 +483,33 @@ npx playwright test --headed
 
 ---
 
-## 9. Design System, Aesthetics & Typography
+## 9. Design Explanation & Workflow Decisions
 
-- **Canvas**: Clean white background (`bg-white`) with subtle borders (`border-zinc-200/90`).
-- **Brand Green Accent**: `#52A68B` used for primary buttons, active tabs, scorecards, and progress indicators.
-- **Typography**: Clean sans-serif hierarchy for labels, paired with monospaced tabular numerals (`font-mono tabular-nums`) for currency, percentages, and deltas to prevent layout shifts.
-- **Top Loading Progress Bar**: A sleek 2.5px emerald progress bar (`src/components/ui/TopProgressBar.tsx`) with subtle backdrop blurring (`backdrop-blur-[1.5px]`) that provides immediate visual feedback on page transitions without intercepting clicks.
+### 9.1 Product Thinking: The Short-Term Rental Acquisitions Flow
+The platform is designed around the core question every real estate investor asks:
+> *"What does the deal cost up front, what does it earn each year, and does the risk-adjusted cash return beat our hurdle rate?"*
+
+To reduce cognitive friction for junior trainees while maintaining analytical rigor, the application sequences underwriting into four progressive stages:
+
+1. **Financials (Capital Stack & Costs)**: Trainees first establish what the asset requires on day one (Purchase Price, Down Payment %, Closing Costs, Setup Budget) and ongoing monthly operating expenditures (OPEX, Property Taxes). This establishes the denominator: **Total Out of Pocket (OOP)**.
+2. **Analysis (Revenue Scenarios & Waterfall)**: Trainees analyze micro-market rental comparables (Comps) and project three revenue scenarios (Low, Mid, High). The live calculation engine instantly derives Net Operating Income (NOI), Debt Service, and Annual Free Cash Flow (FCF).
+3. **Deal Tags & Strategic Thesis**: Trainees classify the property with 13 standard institutional acquisition tags (Turnkey, Luxury, Waterfront, Tax Efficient, etc.), estimate renovation complexity, and write their investment thesis.
+4. **Review & Pre-Flight Audit**: Before submission, an automated validation checklist verifies all required assumptions. Incomplete fields or invalid scenario hierarchies ($\text{Low} \le \text{Mid} \le \text{High}$) are flagged immediately, preventing corrupt or accidental submissions.
+
+### 9.2 Blind Underwriting & Gamified Calibration
+- **Information Asymmetry**: Trainees never see the senior analyst's reference model or target bands while underwriting. This forces analysts to develop independent market judgment using comps and data.
+- **Immediate Post-Submission Calibration**: Upon submission, the platform delivers instant feedback with:
+  - Hero Scorecard (100 / 70 / 40 points).
+  - Continuous Visual Target Band Gauge showing where their estimate landed relative to the senior analyst's reference.
+  - Plain-English Variance Narrative (e.g., *"Your Mid forecast of $125,000 was within 0.0% of senior benchmark"*).
+  - Side-by-side line item comparison table showing exactly where revenue, cost, or financing assumptions diverged.
+- **Cohort Leaderboard**: Gamifies learning with ranked standings, accuracy averages, and streak tracking.
+
+### 9.3 Visual Ergonomics & Design Aesthetics
+- **Clean White-Canvas Palette**: Built on clean neutral surfaces (`bg-white`, `border-zinc-200`) paired with corporate emerald accents (`#52A68B`).
+- **Tabular Monospaced Numerals**: All currency values, percentages, and metrics use `font-mono tabular-nums` to eliminate jitter and layout shifts during real-time typing.
+- **Unobtrusive Non-Blocking Navigation**: Top progress indicator with subtle dulling backdrop lets analysts know async operations are saving without blocking interaction.
+- **Fully Responsive Architecture**: Layouts adapt dynamically across mobile phones, tablets, laptops, and ultra-wide desktop monitors with collapsible sidebar panels and touch-optimized buttons.
 
 ---
 

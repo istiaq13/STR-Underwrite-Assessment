@@ -36,14 +36,14 @@ export const RealtimeResultsPanel: React.FC<RealtimeResultsPanelProps> = ({ draf
         </h3>
       </div>
 
-      {/* 1. Headline KPI Metrics Ribbon (2x2 Grid) */}
-      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+      {/* 1. Headline KPI Metrics Ribbon (6 Core Outputs: OOP, CoC, NOI, FCF, Tax Savings, PRR) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
         {/* Total Out of Pocket */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+        <div id="metric-total-oop" className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
           <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Total Out of Pocket
           </span>
-          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-zinc-900 truncate">
+          <div className="mt-1 text-base sm:text-lg font-bold font-mono text-zinc-900 truncate">
             {formatCurrency(calc?.total_oop)}
           </div>
           <p className="mt-1 text-[10px] text-zinc-500 truncate">
@@ -52,11 +52,11 @@ export const RealtimeResultsPanel: React.FC<RealtimeResultsPanelProps> = ({ draf
         </div>
 
         {/* Expected Cash-on-Cash Return */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+        <div id="metric-coc-return" className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
           <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Expected Cash-on-Cash
           </span>
-          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-[#52A68B] truncate">
+          <div className="mt-1 text-base sm:text-lg font-bold font-mono text-[#52A68B] truncate">
             {formatPercent(scenarios?.mid.cash_on_cash_pct)}
           </div>
           <p className="mt-1 text-[10px] text-zinc-500 truncate">
@@ -65,11 +65,11 @@ export const RealtimeResultsPanel: React.FC<RealtimeResultsPanelProps> = ({ draf
         </div>
 
         {/* Net Operating Income */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+        <div id="metric-noi" className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
           <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Net Operating Income
           </span>
-          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-zinc-900 truncate">
+          <div className="mt-1 text-base sm:text-lg font-bold font-mono text-zinc-900 truncate">
             {formatCurrency(scenarios?.mid.net_operating_income)}
           </div>
           <p className="mt-1 text-[10px] text-zinc-500 truncate">
@@ -78,15 +78,41 @@ export const RealtimeResultsPanel: React.FC<RealtimeResultsPanelProps> = ({ draf
         </div>
 
         {/* Free Cash Flow */}
-        <div className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+        <div id="metric-fcf" className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
           <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
             Free Cash Flow (FCF)
           </span>
-          <div className="mt-1 text-base sm:text-lg lg:text-xl font-bold font-mono text-zinc-900 truncate">
+          <div className="mt-1 text-base sm:text-lg font-bold font-mono text-zinc-900 truncate">
             {formatCurrency(scenarios?.mid.annual_free_cash_flow)}
           </div>
           <p className="mt-1 text-[10px] text-zinc-500 truncate">
             Net cash flow after debt service
+          </p>
+        </div>
+
+        {/* First-Year Tax Savings */}
+        <div id="metric-tax-savings" className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
+            Y1 Tax Savings
+          </span>
+          <div className="mt-1 text-base sm:text-lg font-bold font-mono text-[#52A68B] truncate">
+            {formatCurrency(calc?.taxes.tax_savings)}
+          </div>
+          <p className="mt-1 text-[10px] text-zinc-500 truncate">
+            First-year bonus depreciation
+          </p>
+        </div>
+
+        {/* Purchase to Revenue Ratio (PRR) */}
+        <div id="metric-prr" className="bg-white rounded-xl border border-zinc-200 p-2.5 sm:p-3.5 shadow-xs min-w-0">
+          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 block truncate">
+            PRR (Rev / Price)
+          </span>
+          <div className="mt-1 text-base sm:text-lg font-bold font-mono text-zinc-900 truncate">
+            {formatPercent(calc?.prr)}
+          </div>
+          <p className="mt-1 text-[10px] text-zinc-500 truncate">
+            Mid Rev ÷ Purchase Price
           </p>
         </div>
       </div>
