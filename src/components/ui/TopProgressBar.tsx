@@ -67,17 +67,33 @@ const TopProgressBarInner: React.FC = () => {
   useEffect(() => {
     if (isOpeningProperty) {
       startProgress();
+    } else if (!isOpeningProperty && visible) {
+      completeProgress();
     }
-  }, [isOpeningProperty, startProgress]);
+  }, [isOpeningProperty, visible, startProgress, completeProgress]);
 
   // When pathname or searchParams change (navigation finished!), complete the progress bar
   useEffect(() => {
     const currentPath = `${pathname}?${searchParams?.toString() || ""}`;
     if (prevPathRef.current !== currentPath) {
       prevPathRef.current = currentPath;
-      completeProgress();
+      if (!isOpeningProperty) {
+        completeProgress();
+      }
     }
-  }, [pathname, searchParams, completeProgress]);
+  }, [pathname, searchParams, isOpeningProperty, completeProgress]);
+
+  // Ensure document-level cursor indicates busy/wait state while loading
+  useEffect(() => {
+    if (visible && !isFinishing) {
+      document.body.style.cursor = "wait";
+    } else {
+      document.body.style.cursor = "";
+    }
+    return () => {
+      document.body.style.cursor = "";
+    };
+  }, [visible, isFinishing]);
 
   // Intercept all route navigation triggers (clicks, popstate, pushState, replaceState)
   useEffect(() => {
@@ -181,16 +197,30 @@ const TopProgressBarInner: React.FC = () => {
     return null;
   }
 
+  const isBlocking = visible && !isFinishing;
+
   return (
     <>
-      {/* Background dulling overlay: dims and subtly blurs background during any route transition */}
+      {/* Background dulling overlay: dims, subtly blurs, and blocks clicks with wait cursor while loading */}
       <div
         id="route-transition-overlay"
         aria-hidden="true"
-        className={`fixed inset-0 z-[9990] transition-opacity duration-300 pointer-events-none ${
-          visible && !isFinishing
-            ? "opacity-100 bg-neutral-900/18 backdrop-blur-[1.5px] backdrop-grayscale-[20%]"
-            : "opacity-0"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onPointerDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        className={`fixed inset-0 z-[9990] transition-opacity duration-200 select-none ${
+          isBlocking
+            ? "opacity-100 bg-neutral-900/18 backdrop-blur-[1.5px] backdrop-grayscale-[20%] pointer-events-auto cursor-wait"
+            : "opacity-0 pointer-events-none cursor-default"
         }`}
       />
 

@@ -84,25 +84,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               <span>{property.market_name}</span>
             </span>
           </div>
-
-          {/* Top Right: Status Tag Overlay */}
-          {property.status === "in_progress" && (
-            <div className="absolute top-3 right-3 pointer-events-none">
-              <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-md backdrop-blur-md flex items-center gap-1.5 border border-amber-400/80">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                In Progress
-              </span>
-            </div>
-          )}
-          {isSubmitted && (
-            <div className="absolute top-3 right-3 pointer-events-none">
-              <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#52A68B] text-white shadow-md backdrop-blur-md flex items-center gap-1.5 border border-[#52A68B]/80">
-                <span className="w-1.5 h-1.5 rounded-full bg-white" />
-                Submitted
-              </span>
-            </div>
-          )}
-
         </div>
 
         {/* Content */}

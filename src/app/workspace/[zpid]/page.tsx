@@ -31,6 +31,7 @@ export default function WorkspacePage() {
     isLoadingDashboard,
     isLoadingDraft,
     selectProperty,
+    startOpeningProperty,
     finishOpeningProperty,
     updateDraft,
     saveDraft,
@@ -45,17 +46,17 @@ export default function WorkspacePage() {
 
   useEffect(() => {
     if (zpid && zpid !== selectedPropertyZpid) {
+      startOpeningProperty(zpid);
       selectProperty(zpid);
     }
-  }, [zpid, selectedPropertyZpid, selectProperty]);
+  }, [zpid, selectedPropertyZpid, selectProperty, startOpeningProperty]);
 
-  // Dismiss top loading bar and dull overlay once workspace is mounted and ready
+  // Dismiss top loading bar and dull overlay once workspace data finishes loading
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (!isLoadingDashboard && !isLoadingDraft) {
       finishOpeningProperty();
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [finishOpeningProperty]);
+    }
+  }, [isLoadingDashboard, isLoadingDraft, finishOpeningProperty]);
 
   const property = properties.find((p) => p.zpid === zpid);
   const market = markets.find((m) => m.id === property?.market_id);
